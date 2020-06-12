@@ -1,0 +1,6 @@
+# Editor Artifacts
+.vscode
+# Virtual Environment
+env/
+# Python Artifacts
+__pycache__/
