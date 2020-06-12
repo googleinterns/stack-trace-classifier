@@ -47,3 +47,18 @@ com.google.moneta.api2.common.error.ApiException:...    1
 ```
 
 Note: The errors in the second half continue but are truncated but are indeed different errors.
+
+# Classification Methodology
+1. We first pattern match to a specific set of 'already known' ERROR_CODES and filter our table based on this.
+2. Next, for the remaining exceptions, we first process to remove extraneous information
+	* We remove any line that begins with '\tat' since java exception convention generates these lines that provide nothing human readable in the sense of trying to cluster errors. 
+	* We remove any line that begins with 'Supressed:' for the same reason as above
+	* We match to only lines that contain at least one ':' since as per java convention, additional human provided error messages when exceptions are thrown are generated in the format of 'errorType: error message'
+3. Next, we tokenize our input through various rules
+	* We perform a preemptive tokenize using the nltk package
+	* We filter out all single character tokens as these are usually either punctuations or neglible words like 'a'
+	* We split on '=' since often error messages contain embedded data types
+	* We remove all trailing and leading punctuation
+	* We filter out all hex numerals and decimal numerals since these are often ip addresses, version numbers and processIds.
+	* We remove all words not in the english dictionary
+4. Finally, we perform K-Means clustering on the remaining datapoints using Cosine Term Frequency. We used Cosine Term Frequency rather than Raw Term Frequency since error messages often repeated themselves variable numbers of times. I.E. "Transaction id:1111 failed because of cancellation ... Transaction id:1111 failed because of cancellation" should be grouped together with "Transaction id:1234 failed because of cancellation".

@@ -102,16 +102,16 @@ class Classifier:
             if row['errorMessage'] is not None:
                 vals.append(row['errorMessage'])
 
-            flag = True
+            no_error_matched = True
             # Check if any of the columns have a match for any of the errors
             for err in config.ERRORS:
                 if any([re.search(err, val) for val in vals]):
                     col.append(err)
-                    flag = False
+                    no_error_matched = False
                     break
 
             # In the case no match has been made, append a None
-            if flag:
+            if no_error_matched:
                 col.append(None)
 
         self.dataframe['ERRCODE'] = col
