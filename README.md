@@ -23,7 +23,7 @@ Steps to run demo stack-trace Classifier
 
 1. Create a python virtual environment https://docs.python.org/3/library/venv.html (recommended)
 2. pip3 -r requirements.txt
-3. python3 classifier.py
+3. python3 demo.py
 
 Example python demo output
 ```

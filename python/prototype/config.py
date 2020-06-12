@@ -1,5 +1,18 @@
+"""
+Configuration module used by classifier.py
+"""
+import re
 import nltk
 
+
+LINE_FILTERS = [
+    re.compile(r'\tat'),
+    re.compile(r'Suppressed')
+]
+
+LINE_MATCHES = [
+    re.compile(r':')
+]
 
 ERRORS = [
     r'SERVER_INTERRUPTED',

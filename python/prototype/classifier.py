@@ -8,7 +8,6 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn import preprocessing
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
-from google.cloud import bigquery
 import numpy as np
 import nltk
 import config
@@ -20,21 +19,23 @@ def process_stack_trace(trace):
     Extracts 'human readable' text from a stack-trace.
 
     Args:
-        trace: a java stack trace (String)
+        trace: String, or object to be transformed to string that is in the
+        form of a java stack trace
 
     Returns:
-        A human readable 'String' java stack trace
+        A String that is a human readable java stack trace
     """
     trace = str(trace)
     str_list = trace.splitlines()
-    # first filtering out lines that contain 'at' and 'Suppressed'
-    filtered = list(filter(lambda s: not re.search(r'\tat', s), str_list))
-    filtered = list(filter(lambda s: not re.search(r'Suppressed', s), filtered))
-    # Ensuring all lines that remain have at least a ':' in them
-    filtered = list(filter(lambda s: re.search(r':', s), filtered))
+    # Filter out bad re
+    for expr in config.LINE_FILTERS:
+        str_list = list(filter(lambda s: not expr.search(s), str_list))
+    # Ensure the re matches
+    for expr in config.LINE_MATCHES:
+        str_list = list(filter(expr.search, str_list))
     # We only "care" about the message following the first ':' I.E.
-    filtered = [word[word.find(':')+1:] for word in filtered]
-    msg = '\n'.join(filtered)
+    str_list = [word[word.find(':')+1:] for word in str_list]
+    msg = '\n'.join(str_list)
     return msg
 
 
@@ -45,7 +46,7 @@ def error_tokenize(trace):
     error
 
     Args:
-        trace: a java stack trace (String)
+        trace: String of a java stack trace
 
     Returns:
         A list of strings with each string representing a token
@@ -77,6 +78,10 @@ class Classifier:
     errors given by a dataframe of exceptions
     """
     def __init__(self, df):
+        """
+        To create a Classifier, one must provide the proper pandas dataframe
+        gathered from bigquery
+        """
         self.dataframe = df
 
 
@@ -178,14 +183,3 @@ class Classifier:
         counts = counts.rename(index=dict(zip(clusters, col)))
         counts = counts.rename(columns={'CLUSTERCODE': 'COUNT'})
         print(counts)
-
-
-if __name__ == "__main__":
-    # Example of how to use the above code
-    client = bigquery.Client()
-    # Note: this is tied to my personal credentials which have access to the table YMMV
-    QUERY = "SELECT * FROM `payments-purchaseorder.debuginfo.sandbox`"
-    dataframe = client.query(QUERY).result().to_dataframe()
-    classifier = Classifier(dataframe)
-    classifier.compute_results()
-    classifier.report_results()
