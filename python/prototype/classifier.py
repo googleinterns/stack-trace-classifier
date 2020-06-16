@@ -2,75 +2,17 @@
 Module for Classification of Error Stack Traces
 Heavy lifting is done by regular expression matching and KMeans
 """
-from string import punctuation
+import datetime
 import re
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn import preprocessing
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 import numpy as np
-import nltk
+import pandas as pd
 import config
-
-
-def process_stack_trace(trace):
-    """
-    Helper Method for errorTokenize
-    Extracts 'human readable' text from a stack-trace.
-
-    Args:
-        trace: String, or object to be transformed to string that is in the
-        form of a java stack trace
-
-    Returns:
-        A String that is a human readable java stack trace
-    """
-    trace = str(trace)
-    str_list = trace.splitlines()
-    # Filter out bad re
-    for expr in config.LINE_FILTERS:
-        str_list = list(filter(lambda s: not expr.search(s), str_list))
-    # Ensure the re matches
-    for expr in config.LINE_MATCHES:
-        str_list = list(filter(expr.search, str_list))
-    # We only "care" about the message following the first ':' I.E.
-    str_list = [word[word.find(':')+1:] for word in str_list]
-    msg = '\n'.join(str_list)
-    return msg
-
-
-def error_tokenize(trace):
-    """
-    A tokenizer for java stack-traces, first uses processStackTrace to extract
-    human readable errors from the stack trace then tokenizes the human readable
-    error
-
-    Args:
-        trace: String of a java stack trace
-
-    Returns:
-        A list of strings with each string representing a token
-    """
-    msg = process_stack_trace(trace)
-    # "Base" tokenization
-    tokens = nltk.word_tokenize(msg)
-    # Many 'words' are just one letter punctuation, I.E. '>'
-    tokens = list(filter(lambda w: len(w) > 1, tokens))
-    # Split any remaining words that contain '=' in them
-    tokens = sum(map(lambda w: re.split(r'=', w), tokens), [])
-    # Removing trailing and leading punctuation
-    punc = punctuation + ':' + '/' + '\n' + '\t'
-    tokens = list(map(lambda w: w.strip(punc), tokens))
-    # Removing all numerics and
-    tokens = list(filter(lambda w: not re.fullmatch(r'[0-9a-f|:|\.]+', w), tokens))
-    # Removes empty strings
-    tokens = list(filter(lambda w: w, tokens))
-    # Removes all words not in the "english" dictionary this one is a little bit extreme ..
-    tokens = list(filter(lambda w: w.lower() in config.WORDS, tokens))
-    # lowercase all tokens for consistency
-    tokens = list(map(lambda w: w.lower(), tokens))
-    return tokens
-
+from human_readable_tokenizer import process_stack_trace
+from stack_trace_tokenizer import error_tokenize
 
 class Classifier:
     """
@@ -167,11 +109,14 @@ class Classifier:
     def report_results(self):
         """
         Prints the results in a friendly format, Error Code / Error Message, Count
+        Writes this result to a table in BQ with the format resultSummary + date
+
+        Preconditions:
+            Assumes that compute_results has run
         """
         # Prints the unique Error Codes and their counts
         error_dataframe = self.dataframe['ERRCODE'].value_counts().to_frame()
         error_dataframe = error_dataframe.rename(columns={'ERRCODE': 'COUNT'})
-        print(error_dataframe)
 
         clusters = self.dataframe['CLUSTERCODE'].dropna().unique()
         np.sort(clusters)
@@ -179,7 +124,16 @@ class Classifier:
         col = []
         for cluster in clusters:
             col.append(
-                self.dataframe[self.dataframe['CLUSTERCODE'] == cluster].iloc[0]['exception'][:50])
-        counts = counts.rename(index=dict(zip(clusters, col)))
-        counts = counts.rename(columns={'CLUSTERCODE': 'COUNT'})
-        print(counts)
+                self.dataframe[self.dataframe['CLUSTERCODE'] == cluster].iloc[0]['exception'])
+        counts.rename(index=dict(zip(clusters, col)), inplace=True)
+        counts.rename(columns={'CLUSTERCODE': 'COUNT'}, inplace=True)
+
+        concatenated = pd.concat([error_dataframe, counts])
+        print(concatenated)
+
+        date = str(datetime.date.today())
+        date = date.replace('-', '_')
+        table_name = config.TABLE_NAME + date
+        concatenated.reset_index(level=0, inplace=True)
+        concatenated.rename(columns={'index': 'ERROR_TYPE'}, inplace=True)
+        concatenated.to_gbq(table_name, config.PROJECT_NAME)
