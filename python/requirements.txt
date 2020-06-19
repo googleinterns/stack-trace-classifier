@@ -2,6 +2,7 @@ cachetools==4.1.0
 certifi==2020.4.5.2
 chardet==3.0.4
 click==7.1.2
+DateTime==4.3
 google-api-core==1.20.0
 google-auth==1.16.1
 google-cloud-bigquery==1.25.0
@@ -13,6 +14,9 @@ joblib==0.15.1
 nltk==3.5
 numpy==1.18.5
 protobuf==3.12.2
+pandas==1.0.4
+pandas-gbq==0.13.2
+pyarrow==0.17.1
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pytz==2020.1
@@ -25,5 +29,3 @@ six==1.15.0
 threadpoolctl==2.1.0
 tqdm==4.46.1
 urllib3==1.25.9
-pyarrow==0.17.1
-pandas==1.0.4

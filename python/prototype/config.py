@@ -5,6 +5,10 @@ import re
 import nltk
 
 
+TABLE_NAME = 'debuginfo.resultsSummary'
+
+PROJECT_NAME = 'payments-purchaseorder'
+
 LINE_FILTERS = [
     re.compile(r'\tat'),
     re.compile(r'Suppressed')
@@ -42,7 +46,8 @@ ERRORS = [
     r'STORAGE_BATCH_INCONSISTENT_CHILD_PAGINATION_TIMESTAMPS',
     r'STORAGE_BATCH_PARENT_UNIT_OF_WORK_INVALID',
     r'STORAGE_PAGINATED_DISALLOWED_WITHOUT_SNAPSHOT_TIMESTAMP',
-    r'SERVER_UNEXPECTED_EXCEPTION',
+    # SERVER_UNEXPECTED_EXCEPTION is uninformative, thus we have removed it from our list of errors
+    # r'SERVER_UNEXPECTED_EXCEPTION',
     r'RPC.CANCELLED',
     r'RPC.UNKNOWN',
     r'RPC.INVALID_ARGUMENT',
@@ -59,6 +64,18 @@ ERRORS = [
     r'RPC.INTERNAL',
     r'RPC.UNAVAILABLE',
     r'RPC.DATA_LOSS'
+]
+
+STACK_LINE_FILTERS = [
+    # filters for 'general' classes and frameworks
+    re.compile(r'com.google.apps.framework'), 
+    re.compile(r'com.google.moneta.api2.framework'), 
+    re.compile(r'com.google.common.util'), 
+    re.compile(r'com.google.net.rpc3'),
+    re.compile(r'java.util'),
+    re.compile(r'java.lang'),
+    # remove anonymous classes
+    re.compile(r'\$')
 ]
 
 MIN_CLUSTER = 2
