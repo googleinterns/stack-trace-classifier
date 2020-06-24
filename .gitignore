@@ -4,3 +4,5 @@
 env/
 # Python Artifacts
 __pycache__/
+# Bazel artifacts
+bazel-*
