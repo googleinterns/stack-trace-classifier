@@ -6,3 +6,10 @@ py_proto_library(
     visibility = ["//python/final:__subpackages__"],
     deps = ["@com_google_protobuf//:protobuf_python"],
 )
+
+py_proto_library(
+    name = "big_query_config",
+    srcs = ["big_query_config.proto"],
+    visibility = ["//python/final:__subpackages__"],
+    deps = ["@com_google_protobuf//:protobuf_python"],
+)

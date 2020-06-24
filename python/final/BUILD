@@ -11,19 +11,15 @@ py_binary(
 py_test(
     name = "config_proto_test",
     srcs = ["config_proto_test.py"],
-    deps = [":test_deps"],
+    deps = [
+        "//proto:big_query_config",
+        "//proto:config",
+    ],
 )
 
 py_library(
     name = "stub_deps",
     deps = [
         requirement("numpy"),
-    ],
-)
-
-py_library(
-    name = "test_deps",
-    deps = [
-        "//proto:config",
     ],
 )
