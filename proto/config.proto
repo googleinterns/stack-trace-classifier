@@ -31,7 +31,7 @@ message Config {
 message ErrorCodeMatcher {
   // Informative error String to scan for (note the string can be a RE)
   // i.e. "STORAGE_STALE_LOCK_TIMESTAMP" 
-  repeated string error = 1;
+  repeated string error_code = 1;
 }
 
 // One possible Error Classification Algorithm
@@ -58,9 +58,18 @@ message Tokenizer {
   // Minimum token length
   int32 token_min_length = 2;
 
-  oneof tokenizer_mode {
-    TokenizerMode mode = 3;
+  // Possible Tokenization modes
+  enum TokenizerMode {
+    UNKNOWN = 0;
+
+    // Tokenizes only the human-readable excerpts from stack trace
+    HUMAN_READABLE = 1;
+
+    // Tokenizes only the stack trace class lines 
+    STACK_TRACE_LINES = 2;
   }
+
+  TokenizerMode mode = 3;
 
   // Additional strings to split the text into words on.
   // Note by default strings are split using spaces and new lines
@@ -72,21 +81,10 @@ message Tokenizer {
 message Preprocessor {
   // Optional regular expressions to explicity omit
   // I.E. "\tat" which gets rid of (at SomeClass.AnotherClass.LastClass)
-  repeated string ignore = 1;
+  repeated string ignore_line_regex_matcher = 1;
 
   // Optional regular expressions to explicity search for
   // Note any string not matching to this will not be included in the tokenizer
   // I.E. "ERROR" which scans only for lines containing "ERROR" 
-  repeated string search = 2;
-}
-
-// Possible Tokenization modes
-enum TokenizerMode {
-  UNKNOWN = 0;
-
-  // Tokenizes only the human-readable excerpts from stack trace
-  HUMAN_READABLE = 1;
-
-  // Tokenizes only the stack trace class lines 
-  STACK_TRACE_LINES = 2;
+  repeated string search_line_regex_matcher = 2;
 }

@@ -1,17 +1,29 @@
 load("@pip3_deps//:requirements.bzl", "requirement")
-load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 
 py_binary(
-    name = "test",
-    srcs = ["test.py"],
-    main = "test.py",
-    deps = [":reqs"],
+    name = "stub",
+    srcs = ["stub.py"],
+    main = "stub.py",
+    deps = [":stub_deps"],
+)
+
+py_test(
+    name = "config_proto_test",
+    srcs = ["config_proto_test.py"],
+    deps = [":test_deps"],
 )
 
 py_library(
-    name = "reqs",
+    name = "stub_deps",
     deps = [
         requirement("numpy"),
+    ],
+)
+
+py_library(
+    name = "test_deps",
+    deps = [
         "//proto:config",
     ],
 )

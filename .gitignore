@@ -6,3 +6,5 @@ env/
 __pycache__/
 # Bazel artifacts
 bazel-*
+# Generated python files
+*pb2.py
