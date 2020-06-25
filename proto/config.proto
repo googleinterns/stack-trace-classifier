@@ -1,0 +1,77 @@
+// Configuration guideline protobuf that specify parameters to be passed into
+// the Classifier
+syntax = "proto3";
+
+// A Config instance specifies the parameters to be passed into the instace of
+// Stack Trace Classifier
+message Config {
+  // Optional Classification Algorithm
+  ErrorCodeMatcher error_code_matcher = 4;
+
+  // Optional Classification Algorithm
+  Clusterer clusterer = 5;
+}
+
+// One possible Error Classification Algorithm
+// Pattern Matches the stack trace for error specified in the error fields
+message ErrorCodeMatcher {
+  // Informative error String to scan for (note the string can be a RE)
+  // i.e. "STORAGE_STALE_LOCK_TIMESTAMP" 
+  // TODO: Populate this field automatically utilizing proto enum(s)
+  repeated string error_code = 1;
+}
+
+// One possible Error Classification Algorithm
+// Attempts to cluster the error stack trace with the below parameters
+message Clusterer {
+  // Mandatory Tokenizer used to parse the stack trace
+  Tokenizer tokenizer = 1;
+
+  // Whether or not to use mini-batch K-means true to use
+  bool mini_batch = 2;
+
+  // Minimum number of Clusters to test
+  int32 min_cluster = 3;
+
+  // Maximum numer of Clusters to test
+  int32 max_cluster = 4;
+}
+
+// Tokenizer utilized by the Clusterer
+message Tokenizer {
+  // Optional preprocessor for the text
+  Preprocessor preprocessor = 1;
+
+  // Minimum token length
+  int32 token_min_length = 2;
+
+  // Possible Tokenization modes
+  enum TokenizerMode {
+    UNKNOWN = 0;
+
+    // Tokenizes only the human-readable excerpts from stack trace
+    HUMAN_READABLE = 1;
+
+    // Tokenizes only the stack trace class lines 
+    STACK_TRACE_LINES = 2;
+  }
+
+  TokenizerMode mode = 3;
+
+  // Additional strings to split the text into words on.
+  // Note by default strings are split using spaces and new lines
+  // i.e. "="
+  repeated string split_on = 4;
+}
+
+// Optional preprocessor utilized by a Tokenizer
+message Preprocessor {
+  // Optional regular expressions to explicity omit
+  // I.E. "\tat" which gets rid of (at SomeClass.AnotherClass.LastClass)
+  repeated string ignore_line_regex_matcher = 1;
+
+  // Optional regular expressions to explicity search for
+  // Note any string not matching to this will not be included in the tokenizer
+  // I.E. "ERROR" which scans only for lines containing "ERROR" 
+  repeated string search_line_regex_matcher = 2;
+}

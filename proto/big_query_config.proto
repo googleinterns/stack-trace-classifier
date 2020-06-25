@@ -1,0 +1,18 @@
+// Configuration guideline protobuf that specify parameters to be passed into
+// Big Query input tables
+syntax = "proto3";
+
+// Big Query Configurations
+message BigQueryConfig {
+  // Project name used by BigQuery
+  // i.e. "payments-purchaseorder"
+  string project_name = 1;
+
+  // Input table to gather the required fields from
+  // i.e. "debuginfo.test4"
+  string input_table_name = 2;
+
+  // Output table to accumulate the results to
+  // i.e. "debuginfo.resultsSummary"
+  string output_table_name = 3;
+}
