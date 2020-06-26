@@ -2,23 +2,34 @@
 // the Classifier
 syntax = "proto3";
 
+import "proto/server_error_reason.proto";
+import "proto/storage_error_reason.proto";
+
 // A Config instance specifies the parameters to be passed into the instace of
 // Stack Trace Classifier
 message Config {
   // Optional Classification Algorithm
-  ErrorCodeMatcher error_code_matcher = 4;
+  ErrorCodeMatcher error_code_matcher = 1;
 
   // Optional Classification Algorithm
-  Clusterer clusterer = 5;
+  Clusterer clusterer = 2;
+
+  // Columns that hold information to be used by the Classification Algorithms
+  // i.e. "exception", "remoteException"
+  repeated string informative_column = 3;
 }
 
 // One possible Error Classification Algorithm
-// Pattern Matches the stack trace for error specified in the error fields
+// Pattern Matches the stack trace for errors found in the enums below
+// Any errors explicitly given are NOT included as informative errors
 message ErrorCodeMatcher {
-  // Informative error String to scan for (note the string can be a RE)
-  // i.e. "STORAGE_STALE_LOCK_TIMESTAMP" 
-  // TODO: Populate this field automatically utilizing proto enum(s)
-  repeated string error_code = 1;
+  // Enum values are infered from the descriptor
+  // Only specify enums to explicitly IGNORE
+  repeated ServerErrorReason ignore_server_error_reason = 1;
+
+  repeated StorageErrorReason ignore_storage_error_reason = 2;
+
+  string output_column_name = 3;
 }
 
 // One possible Error Classification Algorithm

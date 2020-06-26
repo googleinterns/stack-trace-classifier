@@ -1,0 +1,22 @@
+{
+    "name": {
+        "0": "RPC_ERROR_SERVER_ERROR",
+        "1": "SERVER_REMOTE_FRAMEWORK_ERROR",
+        "2": "STORAGE_STALE_LOCK_TIMESTAMP"
+    },
+    "exception": {
+        "0": "abcde.SERVER_NOT_IMPLEMENTED_EXCEPTION.abcd asfasf fef",
+        "1": "some text",
+        "2": "some other text"
+    },
+    "remoteException": {
+        "0": [],
+        "1": ["This is also useless text", "This is the useful text STORAGE_PAGINATED_DISALLOWED_WITHOUT_SNAPSHOT_TIMESTAMP"],
+        "2": []
+    },
+    "errorMessage": {
+        "0": null,
+        "1": null,
+        "2": "This is useful text a, b, c STORAGE_STALE_LOCK_TIMESTAMP, d e, f"
+    }
+}

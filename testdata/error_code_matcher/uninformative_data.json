@@ -1,0 +1,22 @@
+{
+    "name": {
+        "0": "a",
+        "1": "b",
+        "2": "c"
+    },
+    "exception": {
+        "0": "SERVER_UNEXPECTED_EXCEPTION",
+        "1": "some text",
+        "2": "some other text"
+    },
+    "remoteException": {
+        "0": [],
+        "1": ["STORAGE_ERROR_REASON_UNKNOWN"],
+        "2": []
+    },
+    "errorMessage": {
+        "0": null,
+        "1": null,
+        "2": "SERVER_ERROR_REASON_UNKNOWN"
+    }
+}
