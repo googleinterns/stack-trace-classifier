@@ -1,0 +1,22 @@
+{
+    "name": {
+        "0": "RPC_ERROR_SERVER_ERROR",
+        "1": "SERVER_REMOTE_FRAMEWORK_ERROR",
+        "2": "STORAGE_STALE_LOCK_TIMESTAMP"
+    },
+    "exception": {
+        "0": "this is USELESS_INFORMATION",
+        "1": "this is also USELESS_INFORMATION",
+        "2": "this line will be removed"
+    },
+    "remoteException": {
+        "0": [],
+        "1": ["there is an error", "we have an error that contains USEFUL_INFORMATION"],
+        "2": []
+    },
+    "errorMessage": {
+        "0": null,
+        "1": null,
+        "2": "This line should be kept since it has an error that is USEFUL_INFORMATION"
+    }
+}

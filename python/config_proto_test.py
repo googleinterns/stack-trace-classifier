@@ -5,7 +5,7 @@ import unittest
 import proto.config_pb2
 import proto.big_query_config_pb2
 
-class TestConfigProto(unittest.TestCase):
+class ConfigProtoTest(unittest.TestCase):
     """
     Unittest class for the config proto
     """

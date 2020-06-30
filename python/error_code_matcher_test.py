@@ -8,7 +8,7 @@ import proto.server_error_reason_pb2
 import proto.storage_error_reason_pb2
 from error_code_matcher import ErrorCodeMatcher
 
-class TestErrorCodeMatcher(unittest.TestCase):
+class ErrorCodeMatcherTest(unittest.TestCase):
     """
     Unittest class for ErrorCodeMatcher
     """
@@ -29,7 +29,6 @@ class TestErrorCodeMatcher(unittest.TestCase):
             "remoteException",
             "errorMessage"
         ]
-
         # configuration using default error codes to match to, see informative_errors.proto
         self.config_default = proto.config_pb2.Config()
         self.config_default.error_code_matcher.ignore_server_error_reason.extend(uninformative_server_errors)

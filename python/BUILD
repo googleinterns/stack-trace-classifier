@@ -9,6 +9,25 @@ py_binary(
 )
 
 py_test(
+    name = "preprocessor_test",
+    srcs = [
+        "preprocessor.py",
+        "preprocessor_test.py",
+    ],
+    data = [
+        "//testdata:preprocessor/empty_data.json",
+        "//testdata:preprocessor/simple_data.json",
+    ],
+    main = "preprocessor_test.py",
+    deps = [
+        "//proto:config",
+        requirement("numpy"),
+        requirement("regex"),
+        requirement("pandas"),
+    ],
+)
+
+py_test(
     name = "error_code_matcher_test",
     srcs = [
         "error_code_matcher.py",
