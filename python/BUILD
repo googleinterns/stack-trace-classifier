@@ -9,6 +9,22 @@ py_binary(
 )
 
 py_test(
+    name = "tokenizer_test",
+    srcs = [
+        "tokenizer.py",
+        "tokenizer_test.py",
+    ],
+    data = [
+        "//testdata:tokenizer/sample_stack_trace.txt",
+    ],
+    main = "tokenizer_test.py",
+    deps = [
+        "//proto:config",
+        requirement("regex"),
+    ],
+)
+
+py_test(
     name = "preprocessor_test",
     srcs = [
         "preprocessor.py",
