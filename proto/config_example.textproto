@@ -14,6 +14,10 @@ clusterer {
     mode: HUMAN_READABLE
     token_min_length: 1
     split_on: "="
+    punctuation: ":"
+    punctuation: "\n"
+    punctuation: "/"
+    punctuation: "\t"
   }
   mini_batch: false
   min_cluster: 2

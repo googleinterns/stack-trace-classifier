@@ -69,10 +69,15 @@ message Tokenizer {
 
   TokenizerMode mode = 3;
 
+  // Additional string punctuation to strip from tokens
+  // By default we strip string.punctuation which includes the following
+  // !"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~
+  repeated string punctuation = 4;
+
   // Additional strings to split the text into words on.
   // Note by default strings are split using spaces and new lines
   // i.e. "="
-  repeated string split_on = 4;
+  repeated string split_on = 5;
 }
 
 // Optional preprocessor utilized by a Tokenizer

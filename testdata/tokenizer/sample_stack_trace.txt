@@ -1,0 +1,8 @@
+java.lang.IllegalArgumentException: No movement code whitelisted for MovementCodeWhitelistParameters{billableService=BILLABLE_SERVICE_GOOGLE_STORE_PURCHASE_ORDER_BUYER, productCode=10713, merchantOfRecordType=GOOGLE, lineItemType=LINE_ITEM_TYPE_REGULAR, operationType=CHARGE, movementType=REVENUE}
+	at com.google.moneta.purchaseorder.monetizer.PurchaseOrderUsageTransaction.lambda$getMovementCode$0(PurchaseOrderUsageTransaction.java:416)
+	at java.util.Optional.orElseThrow(Optional.java:290)
+	at com.google.moneta.purchaseorder.monetizer.PurchaseOrderUsageTransaction.getMovementCode(PurchaseOrderUsageTransaction.java:413)
+	at com.google.moneta.purchaseorder.monetizer.PurchaseOrderUsageTransaction.createRevenueMovement(PurchaseOrderUsageTransaction.java:496)
+	at com.google.moneta.purchaseorder.monetizer.PurchaseOrderUsageTransaction.addLineItem(PurchaseOrderUsageTransaction.java:348)
+	at com.google.moneta.purchaseorder.monetizer.PurchaseOrderUsageTransaction.addAllLineItems(PurchaseOrderUsageTransaction.java:195)
+	at com.google.moneta.purchaseorder.service.purchaseorder.purchaseorderinternal.ChargeAction.charge(ChargeAction.java:127)
