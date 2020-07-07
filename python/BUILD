@@ -9,6 +9,29 @@ py_binary(
 )
 
 py_test(
+    name = "k_means_clusterer_test",
+    srcs = [
+        "k_means_clusterer.py",
+        "k_means_clusterer_test.py",
+        "preprocessor.py",
+        "tokenizer.py",
+    ],
+    data = [
+        "//testdata:k_means_clusterer/repeated_data.json",
+        "//testdata:k_means_clusterer/simple_data.json",
+        "//testdata:k_means_clusterer/stack_trace_data.json",
+    ],
+    main = "k_means_clusterer_test.py",
+    deps = [
+        "//proto:config",
+        requirement("numpy"),
+        requirement("regex"),
+        requirement("pandas"),
+        requirement("scikit-learn"),
+    ],
+)
+
+py_test(
     name = "tokenizer_test",
     srcs = [
         "tokenizer.py",

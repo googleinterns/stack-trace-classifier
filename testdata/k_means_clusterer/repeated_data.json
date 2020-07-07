@@ -1,0 +1,30 @@
+{
+    "name": {
+        "0": "SERVER_REMOTE_FRAMEWORK_ERROR",
+        "1": "SERVER_REMOTE_FRAMEWORK_ERROR",
+        "2": "STORAGE_STALE_LOCK_TIMESTAMP",
+        "3": "STORAGE_STALE_LOCK_TIMESTAMP",
+        "4": "STORAGE_STALE_LOCK_TIMESTAMP"
+    },
+    "exception": {
+        "0": "subscription id 123456 couldn't be recurred since it was in canceled state",
+        "1": "subscription id 456789 couldn't be recurred since it was in canceled state",
+        "2": "a java exception happened on on line 11215512315",
+        "3": "a java exception happened on on line 77512314",
+        "4": "a java exception happened on on line 115851231"
+    },
+    "remoteException": {
+        "0": ["subscription id 123456 couldn't be recurred since it was in canceled state"],
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+    },
+    "errorMessage": {
+        "0": "subscription id 123456 couldn't be recurred since it was in canceled state",
+        "1": null,
+        "2": null,
+        "3": null,
+        "4": null
+    }
+}
