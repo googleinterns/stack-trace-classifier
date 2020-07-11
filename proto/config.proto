@@ -46,6 +46,8 @@ message Clusterer {
 
   // Maximum numer of Clusters to test
   int32 max_cluster = 4;
+
+  string output_column_name = 5;
 }
 
 // Tokenizer utilized by the Clusterer
@@ -63,7 +65,7 @@ message Tokenizer {
     // Tokenizes only the human-readable excerpts from stack trace
     HUMAN_READABLE = 1;
 
-    // Tokenizes only the stack trace class lines 
+    // Tokenizes only the stack trace class lines
     STACK_TRACE_LINES = 2;
   }
 
@@ -88,6 +90,6 @@ message Preprocessor {
 
   // Optional regular expressions to explicity search for
   // Note any string not matching to this will not be included in the tokenizer
-  // I.E. "ERROR" which scans only for lines containing "ERROR" 
+  // I.E. "ERROR" which scans only for lines containing "ERROR"
   repeated string search_line_regex_matcher = 2;
 }
