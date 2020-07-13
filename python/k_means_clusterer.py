@@ -96,6 +96,8 @@ class KMeansClusterer:
 
         # label each error using the 'best' silhouette label
         best_labels = labels[silhouette_scores.index(max(silhouette_scores))]
+        # convert to string for consistency
+        best_labels = list(map(str, best_labels))
 
         # Label each exception with a cluster tag
         if self.error_code_matcher_run:

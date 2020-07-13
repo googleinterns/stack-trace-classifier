@@ -6,13 +6,16 @@ syntax = "proto3";
 message BigQueryConfig {
   // Project name used by BigQuery
   // i.e. "payments-purchaseorder"
-  string project_name = 1;
+  string project_id = 1;
+
+  // Dataset name used by BigQuery i.e. "debuginfo"
+  string dataset_id = 2;
 
   // Input table to gather the required fields from
-  // i.e. "debuginfo.test4"
-  string input_table_name = 2;
+  // i.e. "test4"
+  string input_table_id = 3;
 
   // Output table to accumulate the results to
   // i.e. "debuginfo.resultsSummary"
-  string output_table_name = 3;
+  string output_table_id = 4;
 }

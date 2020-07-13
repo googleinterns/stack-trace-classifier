@@ -23,8 +23,8 @@ class ConfigProtoTest(unittest.TestCase):
         Tests whether an existing field works as intended
         """
         config = proto.big_query_config_pb2.BigQueryConfig()
-        config.project_name = "name"
-        self.assertTrue(config.project_name == "name")
+        config.project_id = "name"
+        self.assertTrue(config.project_id == "name")
 
 
     def test_has_nested_field(self):

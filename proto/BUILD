@@ -29,3 +29,5 @@ py_proto_library(
     srcs = ["storage_error_reason.proto"],
     deps = ["@com_google_protobuf//:protobuf_python"],
 )
+
+exports_files(glob(["*.textproto"]))
