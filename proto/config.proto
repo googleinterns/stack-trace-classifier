@@ -17,6 +17,9 @@ message Config {
   // Columns that hold information to be used by the Classification Algorithms
   // i.e. "exception", "remoteException"
   repeated string informative_column = 3;
+
+  // Summarizer information
+  Summarizer summarizer = 4;
 }
 
 // One possible Error Classification Algorithm
@@ -92,4 +95,9 @@ message Preprocessor {
   // Note any string not matching to this will not be included in the tokenizer
   // I.E. "ERROR" which scans only for lines containing "ERROR"
   repeated string search_line_regex_matcher = 2;
+}
+
+message Summarizer {
+  // The number of messages to show in each cluster/group of data during summarization
+  int32 n_messages = 1;
 }

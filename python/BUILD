@@ -2,10 +2,56 @@ load("@pip3_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 
 py_binary(
-    name = "stub",
-    srcs = ["stub.py"],
-    main = "stub.py",
-    deps = [":stub_deps"],
+    name = "stack_trace_classifier_main",
+    srcs = [
+        "stack_trace_classifier_main.py",
+        "k_means_clusterer.py",
+        "preprocessor.py",
+        "tokenizer.py",
+    ],
+    data = [
+        "//proto:big_query_config_example.textproto",
+        "//proto:config_example.textproto",
+    ],
+    main = "stack_trace_classifier_main.py",
+    deps = [":stack_trace_classifier_main_deps"],
+)
+
+py_library(
+    name = "stack_trace_classifier_main_deps",
+    deps = [
+        ":error_code_matcher",
+        ":k_means_clusterer",
+        ":summarizer",
+        requirement("six"),
+        requirement("google-api-core"),
+        requirement("google-auth"),
+        requirement("google-cloud-bigquery"),
+        requirement("google-resumable-media"),
+    ],
+)
+
+py_library(
+    name = "summarizer",
+    srcs = [
+        "summarizer.py",
+    ],
+    deps = [
+        requirement("pandas"),
+    ],
+)
+
+py_library(
+    name = "k_means_clusterer",
+    srcs = [
+        "k_means_clusterer.py",
+    ],
+    deps = [
+        ":preprocessor",
+        ":tokenizer",
+        "//proto:config",
+        requirement("scikit-learn"),
+    ],
 )
 
 py_test(
@@ -31,6 +77,17 @@ py_test(
     ],
 )
 
+py_library(
+    name = "tokenizer",
+    srcs = [
+        "tokenizer.py",
+    ],
+    deps = [
+        "//proto:config",
+        requirement("regex"),
+    ],
+)
+
 py_test(
     name = "tokenizer_test",
     srcs = [
@@ -47,6 +104,19 @@ py_test(
     ],
 )
 
+py_library(
+    name = "preprocessor",
+    srcs = [
+        "preprocessor.py",
+    ],
+    deps = [
+        "//proto:config",
+        requirement("numpy"),
+        requirement("regex"),
+        requirement("pandas"),
+    ],
+)
+
 py_test(
     name = "preprocessor_test",
     srcs = [
@@ -60,6 +130,18 @@ py_test(
     main = "preprocessor_test.py",
     deps = [
         "//proto:config",
+        requirement("numpy"),
+        requirement("regex"),
+        requirement("pandas"),
+    ],
+)
+
+py_library(
+    name = "error_code_matcher",
+    srcs = [
+        "error_code_matcher.py",
+    ],
+    deps = [
         requirement("numpy"),
         requirement("regex"),
         requirement("pandas"),
@@ -92,12 +174,5 @@ py_test(
     deps = [
         "//proto:big_query_config",
         "//proto:config",
-    ],
-)
-
-py_library(
-    name = "stub_deps",
-    deps = [
-        requirement("numpy"),
     ],
 )
