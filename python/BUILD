@@ -4,9 +4,9 @@ load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 py_binary(
     name = "stack_trace_classifier_main",
     srcs = [
-        "stack_trace_classifier_main.py",
         "k_means_clusterer.py",
         "preprocessor.py",
+        "stack_trace_classifier_main.py",
         "tokenizer.py",
     ],
     data = [
@@ -38,6 +38,8 @@ py_library(
     ],
     deps = [
         requirement("pandas"),
+        requirement("numpy"),
+        requirement("regex"),
     ],
 )
 
