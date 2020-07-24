@@ -4,10 +4,7 @@ load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
 py_binary(
     name = "stack_trace_classifier_main",
     srcs = [
-        "k_means_clusterer.py",
-        "preprocessor.py",
         "stack_trace_classifier_main.py",
-        "tokenizer.py",
     ],
     data = [
         "//proto:big_query_config_example.textproto",
@@ -53,16 +50,14 @@ py_library(
         ":tokenizer",
         "//proto:config_py_pb2",
         requirement("scikit-learn"),
+        requirement("pandas"),
     ],
 )
 
 py_test(
     name = "k_means_clusterer_test",
     srcs = [
-        "k_means_clusterer.py",
         "k_means_clusterer_test.py",
-        "preprocessor.py",
-        "tokenizer.py",
     ],
     data = [
         "//testdata:k_means_clusterer/repeated_data.json",
@@ -71,11 +66,7 @@ py_test(
     ],
     main = "k_means_clusterer_test.py",
     deps = [
-        "//proto:config_py_pb2",
-        requirement("numpy"),
-        requirement("regex"),
-        requirement("pandas"),
-        requirement("scikit-learn"),
+        ":k_means_clusterer",
     ],
 )
 
@@ -93,7 +84,6 @@ py_library(
 py_test(
     name = "tokenizer_test",
     srcs = [
-        "tokenizer.py",
         "tokenizer_test.py",
     ],
     data = [
@@ -101,8 +91,7 @@ py_test(
     ],
     main = "tokenizer_test.py",
     deps = [
-        "//proto:config_py_pb2",
-        requirement("regex"),
+        ":tokenizer",
     ],
 )
 
@@ -122,7 +111,6 @@ py_library(
 py_test(
     name = "preprocessor_test",
     srcs = [
-        "preprocessor.py",
         "preprocessor_test.py",
     ],
     data = [
@@ -131,10 +119,7 @@ py_test(
     ],
     main = "preprocessor_test.py",
     deps = [
-        "//proto:config_py_pb2",
-        requirement("numpy"),
-        requirement("regex"),
-        requirement("pandas"),
+        ":preprocessor",
     ],
 )
 
@@ -144,6 +129,7 @@ py_library(
         "error_code_matcher.py",
     ],
     deps = [
+        "//proto:config_py_pb2",
         requirement("numpy"),
         requirement("regex"),
         requirement("pandas"),
@@ -153,7 +139,6 @@ py_library(
 py_test(
     name = "error_code_matcher_test",
     srcs = [
-        "error_code_matcher.py",
         "error_code_matcher_test.py",
     ],
     data = [
@@ -163,10 +148,7 @@ py_test(
     ],
     main = "error_code_matcher_test.py",
     deps = [
-        "//proto:config_py_pb2",
-        requirement("numpy"),
-        requirement("regex"),
-        requirement("pandas"),
+        ":error_code_matcher",
     ],
 )
 
