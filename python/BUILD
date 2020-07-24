@@ -51,7 +51,7 @@ py_library(
     deps = [
         ":preprocessor",
         ":tokenizer",
-        "//proto:config",
+        "//proto:config_py_pb2",
         requirement("scikit-learn"),
     ],
 )
@@ -71,7 +71,7 @@ py_test(
     ],
     main = "k_means_clusterer_test.py",
     deps = [
-        "//proto:config",
+        "//proto:config_py_pb2",
         requirement("numpy"),
         requirement("regex"),
         requirement("pandas"),
@@ -85,7 +85,7 @@ py_library(
         "tokenizer.py",
     ],
     deps = [
-        "//proto:config",
+        "//proto:config_py_pb2",
         requirement("regex"),
     ],
 )
@@ -101,7 +101,7 @@ py_test(
     ],
     main = "tokenizer_test.py",
     deps = [
-        "//proto:config",
+        "//proto:config_py_pb2",
         requirement("regex"),
     ],
 )
@@ -112,7 +112,7 @@ py_library(
         "preprocessor.py",
     ],
     deps = [
-        "//proto:config",
+        "//proto:config_py_pb2",
         requirement("numpy"),
         requirement("regex"),
         requirement("pandas"),
@@ -131,7 +131,7 @@ py_test(
     ],
     main = "preprocessor_test.py",
     deps = [
-        "//proto:config",
+        "//proto:config_py_pb2",
         requirement("numpy"),
         requirement("regex"),
         requirement("pandas"),
@@ -163,7 +163,7 @@ py_test(
     ],
     main = "error_code_matcher_test.py",
     deps = [
-        "//proto:config",
+        "//proto:config_py_pb2",
         requirement("numpy"),
         requirement("regex"),
         requirement("pandas"),
@@ -174,7 +174,7 @@ py_test(
     name = "config_proto_test",
     srcs = ["config_proto_test.py"],
     deps = [
-        "//proto:big_query_config",
-        "//proto:config",
+        "//proto:big_query_config_py_pb2",
+        "//proto:config_py_pb2",
     ],
 )

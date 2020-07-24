@@ -2,10 +2,12 @@
 // the Classifier
 syntax = "proto3";
 
+package proto;
+
 import "proto/server_error_reason.proto";
 import "proto/storage_error_reason.proto";
 
-// A Config instance specifies the parameters to be passed into the instace of
+// A Config instance specifies the parameters to be passed into the instance of
 // Stack Trace Classifier
 message Config {
   // Optional Classification Algorithm
@@ -87,7 +89,7 @@ message Tokenizer {
 
 // Optional preprocessor utilized by a Tokenizer
 message Preprocessor {
-  // Optional regular expressions to explicity omit
+  // Optional regular expressions to explicitly omit
   // I.E. "\tat" which gets rid of (at SomeClass.AnotherClass.LastClass)
   repeated string ignore_line_regex_matcher = 1;
 

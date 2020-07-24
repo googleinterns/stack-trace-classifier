@@ -2,6 +2,8 @@
 // Big Query input tables
 syntax = "proto3";
 
+package proto;
+
 // Big Query Configurations
 message BigQueryConfig {
   // Project name used by BigQuery

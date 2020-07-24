@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package proto;
+
 enum StorageErrorReason {
   STORAGE_ERROR_REASON_UNKNOWN = 0;
   STORAGE_LIFECYCLE_CHANGE_NOT_ALLOWED = 1;
