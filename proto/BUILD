@@ -1,13 +1,12 @@
 load("@com_google_protobuf//:protobuf.bzl", "py_proto_library")
-load("@rules_python//python:defs.bzl", "py_library")
 
 py_proto_library(
     name = "config_py_pb2",
     srcs = ["config.proto"],
     visibility = ["//python:__subpackages__"],
     deps = [
-        ":storage_error_reason_py_pb2",
         ":server_error_reason_py_pb2",
+        ":storage_error_reason_py_pb2",
         "@com_google_protobuf//:protobuf_python",
     ],
 )

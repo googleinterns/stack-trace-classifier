@@ -20,11 +20,15 @@ py_library(
         ":error_code_matcher",
         ":k_means_clusterer",
         ":summarizer",
-        requirement("six"),
+        "//proto:big_query_config_py_pb2",
+        "//proto:config_py_pb2",
+        requirement("absl-py"),
+        requirement("pandas_gbq"),
         requirement("google-api-core"),
         requirement("google-auth"),
         requirement("google-cloud-bigquery"),
         requirement("google-resumable-media"),
+        requirement("six"),
     ],
 )
 
