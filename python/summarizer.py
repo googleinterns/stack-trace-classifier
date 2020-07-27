@@ -66,9 +66,10 @@ class Summarizer:
     """
     stack_lines_col = []
     other_text_lines_col = []
-    for message_list in exception_message_column:
+    for message_json in exception_message_column:
+      message_list = pd.read_json(message_json).values
       # we arbitrarily choose the first message as the representative
-      exception_message = message_list[0]
+      exception_message = message_list[0][0]
       exception_message_lines = exception_message.splitlines()
       # get all stack trace lines
       stack_lines = list(
@@ -111,7 +112,7 @@ class Summarizer:
     error_counts = self.df[column].value_counts()
     df_dropped_cols = self.df.drop(columns=cols_to_drop)
     groups = df_dropped_cols.groupby(column).agg(
-        lambda x: list(x)[:self.n_messages])
+        lambda x: x.head(self.n_messages).to_json(orient='values'))
     groups['SIZE'] = error_counts
     stack_lines_col, text_lines_col = self.summarize_exception(
         groups[self.summary_input_column])
