@@ -1,6 +1,6 @@
 """Module for K-Means Clustering of data points."""
 from preprocessor import Preprocessor
-import proto.config_pb2
+import proto.config_pb2 as config_pb2
 from sklearn import preprocessing
 from sklearn.cluster import KMeans
 from sklearn.cluster import MiniBatchKMeans
@@ -24,13 +24,9 @@ class KMeansClusterer:
         config.proto.
     """
     self.df = df
-    # check if error_code_matcher has been run
-    self.error_code_matcher_run = config.HasField('error_code_matcher')
-    if self.error_code_matcher_run:
-      self.error_code_matcher_column = config.error_code_matcher.output_column_name
 
     # internal column name for our Preprocessor
-    self.internal_column_name = '_internal_proprocessor_output_col_'
+    self.internal_column_name = '_internal_preprocessor_output_col_'
 
     # run the preprocessor
     # (even if no config given preprocessor generates internal column)
@@ -39,9 +35,9 @@ class KMeansClusterer:
 
     # get the appropriate tokenization method
     tokenizer = Tokenizer(config)
-    if config.clusterer.tokenizer.mode == proto.config_pb2.Tokenizer.TokenizerMode.HUMAN_READABLE:
+    if config.clusterer.tokenizer.mode == config_pb2.Tokenizer.TokenizerMode.HUMAN_READABLE:
       self.tokenization_method = tokenizer.human_readable_tokenizer
-    elif config.clusterer.tokenizer.mode == proto.config_pb2.Tokenizer.TokenizerMode.STACK_TRACE_LINES:
+    elif config.clusterer.tokenizer.mode == config_pb2.Tokenizer.TokenizerMode.STACK_TRACE_LINES:
       self.tokenization_method = tokenizer.stack_trace_line_tokenizer
     # if no valid tokenization mode is chosen, error
     else:
@@ -67,15 +63,10 @@ class KMeansClusterer:
       Adds a column 'CLUSTERCODE' for each exception where clustercode is the cluster in
         which the exception belongs to if applicable.
     """
-    # Get the columns that need to be Clustered
-    to_cluster = self.df
-    if self.error_code_matcher_run:
-      to_cluster = self.df[self.df[self.error_code_matcher_column].isna()]
-
     # Vectorize the input using CountVectorizer
     term_freq_matrix = CountVectorizer(
         tokenizer=self.tokenization_method).fit_transform(
-            to_cluster[self.internal_column_name])
+            self.df[self.internal_column_name])
     # normalize in case of repeats
     normalized_matrix = preprocessing.normalize(term_freq_matrix)
 
@@ -105,8 +96,4 @@ class KMeansClusterer:
     best_labels = list(map(str, best_labels))
 
     # Label each exception with a cluster tag
-    if self.error_code_matcher_run:
-      self.df.loc[self.df[self.error_code_matcher_column].isna(),
-                  self.output_column_name] = best_labels
-    else:
-      self.df[self.output_column_name] = best_labels
+    self.df[self.output_column_name] = best_labels

@@ -81,10 +81,11 @@ class Summarizer:
       # filter out lines that contain embedded stack trace lines
       other_text_lines = list(
           filter(
-              lambda w: not re.search(self.JAVA_CLASS_LINE_PREFIX, w),  # pylint: disable=cell-var-from-loop
+              lambda w: not re.search(self.JAVA_CLASS_LINE_PREFIX, w),
               other_text_lines))
       # filtering out class lines that contain uniformative classes.
       for expr in self.ignore_lines:
+        # pylint: disable=cell-var-from-loop
         stack_lines = list(filter(lambda st: not expr.search(st), stack_lines))
       stack_lines = stack_lines[:self.n_class_lines_to_show]
       stack_lines = list(filter(lambda w: w, stack_lines))
@@ -112,7 +113,7 @@ class Summarizer:
     error_counts = self.df[column].value_counts()
     df_dropped_cols = self.df.drop(columns=cols_to_drop)
     groups = df_dropped_cols.groupby(column).agg(
-        lambda x: x.head(self.n_messages).to_json(orient='values'))
+        lambda x: x[x.notna()].head(self.n_messages).to_json(orient='values'))
     groups['SIZE'] = error_counts
     stack_lines_col, text_lines_col = self.summarize_exception(
         groups[self.summary_input_column])
@@ -120,12 +121,12 @@ class Summarizer:
     groups['CLASS_LINES'] = stack_lines_col
     return groups.reset_index()
 
-  @staticmethod
-  def reorganize_dataframe(dataframe, cols_to_reorganize):
+  def reorganize_dataframe(self, dataframe, cols_to_reorganize):
     """Reorganizes the dataframe such that the columns to reorganize appear first.
 
     This makes the dataframe more readable during output.
-    This method ensures that SIZE is the last column to appear after the possible error codes.
+    This method ensures that SIZE is the first column to appear after the possible cluster codes.
+    This method also ensures that cluster_code appears as the first column.
 
     Args:
       dataframe: dataframe to reorganize the information of
@@ -139,10 +140,13 @@ class Summarizer:
     dataframe_cols = set(dataframe.columns)
     other_cols = dataframe_cols ^ cols_to_reorganize
     cols_list = list(cols_to_reorganize)
-    # Ensure the column 'SIZE' appears last
-    cols_list.append(cols_list.pop(cols_list.index('SIZE')))
+    # Ensure the column order is, 'TEXT', 'CLASS_LINES'
     cols_list.append(cols_list.pop(cols_list.index('TEXT')))
     cols_list.append(cols_list.pop(cols_list.index('CLASS_LINES')))
+    # Ensure the column that is second is 'SIZE'
+    cols_list.insert(0, cols_list.pop(cols_list.index('SIZE')))
+    # Ensure that the first column is the clusterer column
+    cols_list.insert(0, cols_list.pop(cols_list.index(self.clusterer_col)))
     return dataframe.loc[:, cols_list + list(other_cols)]
 
   def generate_summary(self):
@@ -160,38 +164,21 @@ class Summarizer:
     since pandas does not naturally support the repeated fields that GBQ does
     """
     # need to drop added columns in final summary table
-    cols_to_drop = ['_internal_proprocessor_output_col_']
-    # dataframes to be joined for output
-    output_dataframes = []
+    cols_to_drop = ['_internal_preprocessor_output_col_']
     # cols to be reordered to the front
     cols_to_reorganize = set()
 
-    # Generate the corresponding data for each classification algorithm
     if self.error_code_matcher_has_run:
-      # make sure to drop the other classification column's information
-      # since its useless for this classifier
-      if self.clusterer_has_run:
-        cols_to_drop.append(self.clusterer_col)
-      error_code_groups = self.summarize_classifier(self.error_code_matcher_col,
-                                                    cols_to_drop)
-      output_dataframes.append(error_code_groups)
-      if self.clusterer_has_run:
-        cols_to_drop.remove(self.clusterer_col)
       cols_to_reorganize.add(self.error_code_matcher_col)
 
+    # Generate the summary data for clusterer
     if self.clusterer_has_run:
-      if self.error_code_matcher_has_run:
-        cols_to_drop.append(self.error_code_matcher_col)
       cluster_code_groups = self.summarize_classifier(self.clusterer_col,
                                                       cols_to_drop)
-      output_dataframes.append(cluster_code_groups)
-      if self.error_code_matcher_has_run:
-        cols_to_drop.remove(self.error_code_matcher_col)
       cols_to_reorganize.add(self.clusterer_col)
 
     # need to reorganize the columns
     cols_to_reorganize.add('SIZE')
     cols_to_reorganize.add('TEXT')
     cols_to_reorganize.add('CLASS_LINES')
-    joined_dataframe = pd.concat(output_dataframes)
-    return self.reorganize_dataframe(joined_dataframe, cols_to_reorganize)
+    return self.reorganize_dataframe(cluster_code_groups, cols_to_reorganize)

@@ -1,6 +1,6 @@
 """Unittest module for Tokenizers."""
 import unittest
-import proto.config_pb2
+import proto.config_pb2 as config_pb2
 from tokenizer import Tokenizer
 
 
@@ -10,18 +10,18 @@ class TokenizerTest(unittest.TestCase):
   def setUp(self):
     """General setup for configuration files."""
     # configuration for human readable Tokenizer
-    human_readable_config = proto.config_pb2.Config()
+    human_readable_config = config_pb2.Config()
     human_readable_config.clusterer.tokenizer.token_min_length = 2
-    human_readable_config.clusterer.tokenizer.mode = proto.config_pb2.Tokenizer.TokenizerMode.HUMAN_READABLE
+    human_readable_config.clusterer.tokenizer.mode = config_pb2.Tokenizer.TokenizerMode.HUMAN_READABLE
     human_readable_config.clusterer.tokenizer.split_on.extend(['='])
     human_readable_config.clusterer.tokenizer.punctuation.extend(
         [':', '/', '\n', '\t'])
     self.human_readable_tokenizer = Tokenizer(human_readable_config)
 
     # configuration for stack trace Tokenizer
-    stack_trace_config = proto.config_pb2.Config()
+    stack_trace_config = config_pb2.Config()
     stack_trace_config.clusterer.tokenizer.token_min_length = 0
-    stack_trace_config.clusterer.tokenizer.mode = proto.config_pb2.Tokenizer.TokenizerMode.STACK_TRACE_LINES
+    stack_trace_config.clusterer.tokenizer.mode = config_pb2.Tokenizer.TokenizerMode.STACK_TRACE_LINES
     self.stack_trace_tokenizer = Tokenizer(stack_trace_config)
     super(TokenizerTest, self).setUp()
 

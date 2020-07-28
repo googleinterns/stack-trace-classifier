@@ -3,7 +3,7 @@ import unittest
 
 import pandas as pd
 from preprocessor import Preprocessor
-import proto.config_pb2
+import proto.config_pb2 as config_pb2
 
 
 class PreprocessorTest(unittest.TestCase):
@@ -15,7 +15,7 @@ class PreprocessorTest(unittest.TestCase):
     search_lines = ['USEFUL_INFORMATION', 'error']
     informative_columns = ["exception", "remoteException", "errorMessage"]
     # config set ups
-    self.config = proto.config_pb2.Config()
+    self.config = config_pb2.Config()
     self.config.clusterer.tokenizer.preprocessor.ignore_line_regex_matcher.extend(
         ignore_lines)
     self.config.clusterer.tokenizer.preprocessor.search_line_regex_matcher.extend(

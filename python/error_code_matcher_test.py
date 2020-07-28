@@ -3,9 +3,9 @@ import unittest
 
 from error_code_matcher import ErrorCodeMatcher
 import pandas as pd
-import proto.config_pb2
-import proto.server_error_reason_pb2
-import proto.storage_error_reason_pb2
+import proto.config_pb2 as config_pb2
+import proto.server_error_reason_pb2 as server_error_reason_pb2
+import proto.storage_error_reason_pb2 as storage_error_reason_pb2
 
 
 class ErrorCodeMatcherTest(unittest.TestCase):
@@ -14,15 +14,15 @@ class ErrorCodeMatcherTest(unittest.TestCase):
   def setUp(self):
     """Setup the test configuration files as well as the test panda df."""
     uninformative_server_errors = [
-        proto.server_error_reason_pb2.SERVER_UNEXPECTED_EXCEPTION,
-        proto.server_error_reason_pb2.SERVER_ERROR_REASON_UNKNOWN
+        server_error_reason_pb2.SERVER_UNEXPECTED_EXCEPTION,
+        server_error_reason_pb2.SERVER_ERROR_REASON_UNKNOWN
     ]
     uninformative_storage_errors = [
-        proto.storage_error_reason_pb2.STORAGE_ERROR_REASON_UNKNOWN
+        storage_error_reason_pb2.STORAGE_ERROR_REASON_UNKNOWN
     ]
     informative_columns = ["exception", "remoteException", "errorMessage"]
     # configuration using default error codes see protobufs
-    self.config_default = proto.config_pb2.Config()
+    self.config_default = config_pb2.Config()
     self.config_default.error_code_matcher.ignore_server_error_reason.extend(
         uninformative_server_errors)
     self.config_default.error_code_matcher.ignore_storage_error_reason.extend(

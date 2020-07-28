@@ -1,0 +1,37 @@
+{
+    "ERROR_CODE": {
+        "0": "STORAGE_STALE_LOCK_TIMESTAMP",
+        "1": null,
+        "2": null
+    },
+    "CLUSTER_CODE": {
+        "0": "0",
+        "1": "0",
+        "2": "1"
+    },
+    "_internal_preprocessor_output_col_": {
+        "0": "test",
+        "1": "test2",
+        "2": "test3"
+    },
+    "name": {
+        "0": "RPC_ERROR_SERVER_ERROR",
+        "1": "SERVER_REMOTE_FRAMEWORK_ERROR",
+        "2": "STORAGE_STALE_LOCK_TIMESTAMP"
+    },
+    "exception": {
+        "0": "test",
+        "1": "test",
+        "2": "test2"
+    },
+    "remoteException": {
+        "0": [],
+        "1": [],
+        "2": []
+    },
+    "errorMessage": {
+        "0": null,
+        "1": null,
+        "2": null
+    }
+}

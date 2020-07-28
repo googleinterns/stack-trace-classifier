@@ -2,7 +2,7 @@
 import re
 import string
 
-import proto.config_pb2
+import proto.config_pb2 as config_pb2
 
 
 class Tokenizer:
@@ -17,7 +17,7 @@ class Tokenizer:
     """
     self.min_token_len = config.clusterer.tokenizer.token_min_length
     # Additional splitting only makes sense on human readable mode
-    if config.clusterer.tokenizer.mode == proto.config_pb2.Tokenizer.TokenizerMode.HUMAN_READABLE:
+    if config.clusterer.tokenizer.mode == config_pb2.Tokenizer.TokenizerMode.HUMAN_READABLE:
       self.split_ons = config.clusterer.tokenizer.split_on
       self.punctuations = config.clusterer.tokenizer.punctuation
 

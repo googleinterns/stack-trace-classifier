@@ -2,8 +2,8 @@
 from error_code_matcher import ErrorCodeMatcher
 from k_means_clusterer import KMeansClusterer
 import pandas_gbq
-import proto.big_query_config_pb2
-import proto.config_pb2
+import proto.big_query_config_pb2 as big_query_config_pb2
+import proto.config_pb2 as config_pb2
 from summarizer import Summarizer
 
 from absl import app
@@ -91,7 +91,7 @@ flags.mark_flag_as_required('config')
 def main(argv):
   # Read classifier configurations from proto file passed in
   classifier_config_path = FLAGS.config
-  classifier_config = proto.config_pb2.Config()
+  classifier_config = config_pb2.Config()
   classifier_file = open(classifier_config_path, 'r')
   classifier_config = text_format.Parse(classifier_file.read(),
                                         classifier_config)
@@ -102,7 +102,7 @@ def main(argv):
     client = bigquery.Client()
     # Read BQ configurations from proto file passed in
     big_query_config_path = FLAGS.big_query_config
-    big_query_config = proto.big_query_config_pb2.BigQueryConfig()
+    big_query_config = big_query_config_pb2.BigQueryConfig()
     big_query_file = open(big_query_config_path, 'r')
     big_query_config = text_format.Parse(big_query_file.read(),
                                          big_query_config)
