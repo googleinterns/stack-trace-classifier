@@ -1,0 +1,37 @@
+{
+    "ERROR_CODE": {
+        "0": "STORAGE_STALE_LOCK_TIMESTAMP",
+        "1": null,
+        "2": null
+    },
+    "CLUSTER_CODE": {
+        "0": "0",
+        "1": "1",
+        "2": "2"
+    },
+    "_internal_preprocessor_output_col_": {
+        "0": "\tat some.class.java",
+        "1": "\tat some.class.java",
+        "2": "\tat some.class.java"
+    },
+    "name": {
+        "0": "RPC_ERROR_SERVER_ERROR",
+        "1": "SERVER_REMOTE_FRAMEWORK_ERROR",
+        "2": "STORAGE_STALE_LOCK_TIMESTAMP"
+    },
+    "exception": {
+        "0": "\tat some.class.java",
+        "1": "\tat some.class2.java",
+        "2": "\tat some.class3.java"
+    },
+    "remoteException": {
+        "0": [],
+        "1": [],
+        "2": []
+    },
+    "errorMessage": {
+        "0": null,
+        "1": null,
+        "2": null
+    }
+}

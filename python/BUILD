@@ -38,9 +38,26 @@ py_library(
         "summarizer.py",
     ],
     deps = [
+        "//proto:config_py_pb2",
         requirement("pandas"),
         requirement("numpy"),
         requirement("regex"),
+    ],
+)
+
+py_test(
+    name = "summarizer_test",
+    srcs = [
+        "summarizer_test.py",
+    ],
+    data = [
+        "//testdata:summarizer/multi_cluster.json",
+        "//testdata:summarizer/simple_data.json",
+        "//testdata:summarizer/stack_lines.json",
+    ],
+    main = "summarizer_test.py",
+    deps = [
+        ":summarizer",
     ],
 )
 

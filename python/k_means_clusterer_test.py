@@ -3,7 +3,7 @@ import unittest
 
 from k_means_clusterer import KMeansClusterer
 import pandas as pd
-import proto.config_pb2
+import proto.config_pb2 as config_pb2
 
 
 class KMeansClustererTest(unittest.TestCase):
@@ -13,20 +13,20 @@ class KMeansClustererTest(unittest.TestCase):
     """Set up for various configurations and test dataframes."""
     informative_columns = ["exception", "remoteException", "errorMessage"]
     # configuration using human readable tokenizer
-    self.config_human_readable = proto.config_pb2.Config()
+    self.config_human_readable = config_pb2.Config()
     self.config_human_readable.informative_column.extend(informative_columns)
     self.config_human_readable.clusterer.tokenizer.token_min_length = 2
-    self.config_human_readable.clusterer.tokenizer.mode = proto.config_pb2.Tokenizer.TokenizerMode.HUMAN_READABLE
+    self.config_human_readable.clusterer.tokenizer.mode = config_pb2.Tokenizer.TokenizerMode.HUMAN_READABLE
     self.config_human_readable.clusterer.mini_batch = False
     self.config_human_readable.clusterer.min_cluster = 2
     self.config_human_readable.clusterer.max_cluster = 5
     self.config_human_readable.clusterer.output_column_name = 'clusterer_output'
 
     # configuration for stack trace lines
-    self.config_stack_trace_lines = proto.config_pb2.Config()
+    self.config_stack_trace_lines = config_pb2.Config()
     self.config_stack_trace_lines.informative_column.extend(informative_columns)
     self.config_stack_trace_lines.clusterer.tokenizer.token_min_length = 2
-    self.config_stack_trace_lines.clusterer.tokenizer.mode = proto.config_pb2.Tokenizer.TokenizerMode.STACK_TRACE_LINES
+    self.config_stack_trace_lines.clusterer.tokenizer.mode = config_pb2.Tokenizer.TokenizerMode.STACK_TRACE_LINES
     self.config_stack_trace_lines.clusterer.mini_batch = False
     self.config_stack_trace_lines.clusterer.min_cluster = 2
     self.config_stack_trace_lines.clusterer.max_cluster = 5
