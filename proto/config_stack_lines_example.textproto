@@ -13,6 +13,7 @@ clusterer {
       ignore_line_regex_matcher: "java.util"
       ignore_line_regex_matcher: "java.lang"
       ignore_line_regex_matcher: "\$"
+      ignore_line_regex_matcher: "sun.reflect"
     }
     mode: STACK_TRACE_LINES
     token_min_length: 1
@@ -35,5 +36,6 @@ summarizer {
   ignore_class_line_regex_matcher: "java.util"
   ignore_class_line_regex_matcher: "java.lang"
   ignore_class_line_regex_matcher: "\$"
+  ignore_class_line_regex_matcher: "sun.reflect"
   n_class_lines_to_show: 20
 }

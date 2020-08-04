@@ -72,28 +72,34 @@ class KMeansClusterer:
 
     silhouette_scores = []
     labels = []
-    # run K-Means for each k between min_cluster and max_cluster
-    # then calculate silhouette score
-    for k in range(self.min_cluster, self.max_cluster):
-      if self.mini_batch:
-        # MiniBatch should only be used on < 1000 sample points
-        # in order to achieve good results for large k,
-        # we need a large batch_size number
-        # 1000 should suffice for all use cases of our current Classifier
-        k_cluster = MiniBatchKMeans(n_clusters=k,
-                                    batch_size=1000).fit(normalized_matrix)
-      else:
-        k_cluster = KMeans(n_clusters=k).fit(normalized_matrix)
-      silhouette_scores.append(
-          silhouette_score(normalized_matrix,
-                           k_cluster.labels_,
-                           metric='euclidean'))
-      labels.append(k_cluster.labels_)
+    try:
+      # run K-Means for each k between min_cluster and max_cluster
+      # then calculate silhouette score
+      for k in range(self.min_cluster, self.max_cluster):
+        if self.mini_batch:
+          # MiniBatch should only be used on < 1000 sample points
+          # in order to achieve good results for large k,
+          # we need a large batch_size number
+          # 1000 should suffice for all use cases of our current Classifier
+          k_cluster = MiniBatchKMeans(n_clusters=k,
+                                      batch_size=1000).fit(normalized_matrix)
+        else:
+          k_cluster = KMeans(n_clusters=k).fit(normalized_matrix)
+        silhouette_scores.append(
+            silhouette_score(normalized_matrix,
+                             k_cluster.labels_,
+                             metric='euclidean'))
+        labels.append(k_cluster.labels_)
 
-    # label each error using the 'best' silhouette label
-    best_labels = labels[silhouette_scores.index(max(silhouette_scores))]
-    # convert to string for consistency
-    best_labels = list(map(str, best_labels))
+      # label each error using the 'best' silhouette label
+      best_labels = labels[silhouette_scores.index(max(silhouette_scores))]
+      # convert to string for consistency
+      best_labels = list(map(str, best_labels))
+    except ValueError:
+      # If only one cluster exists, silhouette score throws Value Error
+      # Since we explicitly do not allow this in config
+      # we simply label all points as one label
+      best_labels = list(map(str, k_cluster.labels_))
 
     # Label each exception with a cluster tag
     self.df[self.output_column_name] = best_labels

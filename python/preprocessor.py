@@ -1,4 +1,5 @@
 """Module for general preprocessing of the available data before further Clustering."""
+import collections.abc
 import re
 
 
@@ -81,7 +82,7 @@ class Preprocessor:
       for column in self.informative_columns:
         if isinstance(row[column], str):
           messages.append(row[column])
-        elif isinstance(row[column], list):
+        elif isinstance(row[column], collections.abc.Iterable):
           for sub_message in row[column]:
             if isinstance(sub_message, str):
               messages.append(sub_message)

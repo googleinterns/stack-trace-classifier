@@ -37,6 +37,12 @@ class Tokenizer:
     # Split for every other defined additional splitter
     for split_on in self.split_ons:
       tokens = sum(map(lambda w: re.split(split_on, w), tokens), [])
+    # Remove all lines that contain '.' (extraneous class info)
+    # Examples include embedded class 'com.google.net.rpc3.RpcException:'
+    tokens = list(filter(lambda w: not re.search(r'\.', w), tokens))
+    # Remove all lines that contain ';' (extraneous debug info)
+    # Examples include 9;StartTimeMs which many exceptions have embedded
+    tokens = list(filter(lambda w: not re.search(';', w), tokens))
     # Removing trailing and leading punctuation
     punctuation = string.punctuation + ''.join(self.punctuations)
     tokens = list(map(lambda w: w.strip(punctuation), tokens))
