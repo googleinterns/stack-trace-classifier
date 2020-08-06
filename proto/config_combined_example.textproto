@@ -8,8 +8,15 @@ clusterer {
   tokenizer {
     preprocessor {
       ignore_line_regex_matcher: "Suppressed"
+      ignore_line_regex_matcher: "com.google.apps.framework"
+      ignore_line_regex_matcher: "com.google.moneta.api2.framework"
+      ignore_line_regex_matcher: "com.google.common.util"
+      ignore_line_regex_matcher: "java.util"
+      ignore_line_regex_matcher: "java.lang"
+      ignore_line_regex_matcher: "\$"
+      ignore_line_regex_matcher: "sun.reflect"
     }
-    mode: HUMAN_READABLE
+    mode: COMBINED
     token_min_length: 1
     # Splitting on = could be useful for tokens like error_code=ERROR_CODE
     split_on: "="
