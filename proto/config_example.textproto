@@ -9,11 +9,14 @@ clusterer {
     preprocessor {
       ignore_line_regex_matcher: "\tat"
       ignore_line_regex_matcher: "Suppressed"
-      search_line_regex_matcher: ":"
     }
     mode: HUMAN_READABLE
     token_min_length: 1
+    # Splitting on = could be useful for tokens like error_code=ERROR_CODE
     split_on: "="
+    # Splitting on [ could be useful for tokens like state[RENEWAL_STOPPED]
+    split_on: "\["
+    split_on: "\]"
     punctuation: ":"
     punctuation: "\n"
     punctuation: "/"
@@ -35,6 +38,7 @@ summarizer {
   ignore_class_line_regex_matcher: "com.google.common.util"
   ignore_class_line_regex_matcher: "java.util"
   ignore_class_line_regex_matcher: "java.lang"
-  ignore_class_line_regex_matcher: "$"
+  ignore_class_line_regex_matcher: "\$"
+  ignore_line_regex_matcher: "sun.reflect"
   n_class_lines_to_show: 20
 }

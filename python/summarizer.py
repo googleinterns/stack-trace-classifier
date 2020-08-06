@@ -80,9 +80,8 @@ class Summarizer:
       other_text_lines = list(filter(lambda w: w, other_text_lines))
       # filter out lines that contain embedded stack trace lines
       other_text_lines = list(
-          filter(
-              lambda w: not re.search(self.JAVA_CLASS_LINE_PREFIX, w),
-              other_text_lines))
+          filter(lambda w: not re.search(self.JAVA_CLASS_LINE_PREFIX, w),
+                 other_text_lines))
       # filtering out class lines that contain uniformative classes.
       for expr in self.ignore_lines:
         # pylint: disable=cell-var-from-loop
