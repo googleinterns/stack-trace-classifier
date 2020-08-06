@@ -39,6 +39,8 @@ class KMeansClusterer:
       self.tokenization_method = tokenizer.human_readable_tokenizer
     elif config.clusterer.tokenizer.mode == config_pb2.Tokenizer.TokenizerMode.STACK_TRACE_LINES:
       self.tokenization_method = tokenizer.stack_trace_line_tokenizer
+    elif config.clusterer.tokenizer.mode == config_pb2.Tokenizer.TokenizerMode.COMBINED:
+      self.tokenization_method = tokenizer.combined_tokenizer
     # if no valid tokenization mode is chosen, error
     else:
       raise NotImplementedError(

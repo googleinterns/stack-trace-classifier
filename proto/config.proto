@@ -72,6 +72,9 @@ message Tokenizer {
 
     // Tokenizes only the stack trace class lines
     STACK_TRACE_LINES = 2;
+
+    // Tokenizes both human-readable excerpts and stack trace lines
+    COMBINED = 3;
   }
 
   TokenizerMode mode = 3;
