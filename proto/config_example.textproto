@@ -31,5 +31,16 @@ informative_column: "remoteException"
 informative_column: "errorMessage"
 summarizer {
   n_messages: 20
+<<<<<<< HEAD
+=======
+  summary_input_column: "exception"
+  ignore_class_line_regex_matcher: "com.google.apps.framework"
+  ignore_class_line_regex_matcher: "com.google.moneta.api2.framework"
+  ignore_class_line_regex_matcher: "com.google.common.util"
+  ignore_class_line_regex_matcher: "java.util"
+  ignore_class_line_regex_matcher: "java.lang"
+  ignore_class_line_regex_matcher: "\$"
+  ignore_class_line_regex_matcher: "sun.reflect"
+>>>>>>> 80d033eb4204c537206d5682a7caaa16ba8c6856
   n_class_lines_to_show: 20
 }

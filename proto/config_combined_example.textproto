@@ -40,5 +40,11 @@ informative_column: "remoteException"
 informative_column: "errorMessage"
 summarizer {
   n_messages: 20
-  n_class_lines_to_show: 20
-}
+<<<<<<< HEAD
+=======
+  summary_input_column: "exception"
+  ignore_class_line_regex_matcher: "com.google.apps.framework"
+  ignore_class_line_regex_matcher: "com.google.moneta.api2.framework"
+  ignore_class_line_regex_matcher: "com.google.common.util"
+  ignore_class_line_regex_matcher: "java.util"
+  ignore_class_line_regex_matcher: "java.lang"
