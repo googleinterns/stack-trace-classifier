@@ -11,19 +11,12 @@ class SummarizerTest(unittest.TestCase):
 
   def setUp(self):
     """General setup for configuration files and pandas dataframes."""
-    ignore_class_lines = [
-        'com.google.apps.framework', 'com.google.moneta.api2.framework',
-        'com.google.common.util', 'java.util', r'\$'
-    ]
     # config dummy error_code_matcher and clusterer set ups
     self.config = config_pb2.Config()
     self.config.error_code_matcher.output_column_name = 'ERROR_CODE'
     self.config.clusterer.output_column_name = 'CLUSTER_CODE'
 
     self.config.summarizer.n_messages = 5
-    self.config.summarizer.summary_input_column = 'exception'
-    self.config.summarizer.ignore_class_line_regex_matcher.extend(
-        ignore_class_lines)
     self.config.summarizer.n_class_lines_to_show = 5
 
     # dataframe set ups
@@ -48,11 +41,11 @@ class SummarizerTest(unittest.TestCase):
 
     summarizer_stack_lines = Summarizer(self.stack_lines_dataframe, self.config)
     output_df_stack_lines = summarizer_stack_lines.generate_summary()
-    self.assertIn('\tat some.class.java',
+    self.assertIn('some.class.java',
                   output_df_stack_lines['CLASS_LINES'].values)
-    self.assertIn('\tat some.class2.java',
+    self.assertIn('some.class2.java',
                   output_df_stack_lines['CLASS_LINES'].values)
-    self.assertIn('\tat some.class3.java',
+    self.assertIn('some.class3.java',
                   output_df_stack_lines['CLASS_LINES'].values)
     self.assertIn('', output_df_stack_lines['TEXT'].values)
 

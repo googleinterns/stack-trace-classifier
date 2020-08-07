@@ -10,9 +10,9 @@
         "2": "2"
     },
     "_internal_preprocessor_output_col_": {
-        "0": "\tat some.class.java",
-        "1": "\tat some.class.java",
-        "2": "\tat some.class.java"
+        "0": "\tat some.class.java(115)",
+        "1": "\tat some.class2.java(221)",
+        "2": "\tat some.class3.java(331)"
     },
     "name": {
         "0": "RPC_ERROR_SERVER_ERROR",

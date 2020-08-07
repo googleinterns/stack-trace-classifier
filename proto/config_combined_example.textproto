@@ -8,11 +8,13 @@ clusterer {
   tokenizer {
     preprocessor {
       ignore_line_regex_matcher: "Suppressed"
-      ignore_line_regex_matcher: "com.google.apps.framework"
+      ignore_line_regex_matcher: "com.google.apps.framework.request.impl"
+      ignore_line_regex_matcher: "com.google.net.rpc3.impl"
       ignore_line_regex_matcher: "com.google.moneta.api2.framework"
       ignore_line_regex_matcher: "com.google.common.util"
+      ignore_line_regex_matcher: "com.google.common.context"
+      ignore_line_regex_matcher: "com.google.tracing"
       ignore_line_regex_matcher: "java.util"
-      ignore_line_regex_matcher: "java.lang"
       ignore_line_regex_matcher: "\$"
       ignore_line_regex_matcher: "sun.reflect"
     }
@@ -38,13 +40,5 @@ informative_column: "remoteException"
 informative_column: "errorMessage"
 summarizer {
   n_messages: 20
-  summary_input_column: "exception"
-  ignore_class_line_regex_matcher: "com.google.apps.framework"
-  ignore_class_line_regex_matcher: "com.google.moneta.api2.framework"
-  ignore_class_line_regex_matcher: "com.google.common.util"
-  ignore_class_line_regex_matcher: "java.util"
-  ignore_class_line_regex_matcher: "java.lang"
-  ignore_class_line_regex_matcher: "\$"
-  ignore_class_line_regex_matcher: "sun.reflect"
   n_class_lines_to_show: 20
 }

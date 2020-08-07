@@ -106,12 +106,6 @@ message Summarizer {
   // The number of messages to show in each cluster/group of data during summarization
   int32 n_messages = 1;
 
-  // The column which we are looking to extract the summary from
-  string summary_input_column = 2;
-
-  // regex for class lines to ignore during error summarization
-  repeated string ignore_class_line_regex_matcher = 3;
-
   // number of class lines to show for each group's summarization
   int32 n_class_lines_to_show = 4;
 }

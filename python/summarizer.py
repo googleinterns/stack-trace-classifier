@@ -4,6 +4,8 @@ import re
 import numpy as np
 import pandas as pd
 
+from tokenizer import Tokenizer
+
 
 class Summarizer:
   """Class for presenting the information given by the classifier algorithms.
@@ -15,7 +17,7 @@ class Summarizer:
     'TEXT' : the non-class line information in this exception group
     etc... : other input dataframe columns in list format denoting one error per item.
   """
-  JAVA_CLASS_LINE_PREFIX = '\tat'
+  INTERNAL_COLUMN_NAME = '_internal_preprocessor_output_col_'
 
   def __init__(self, df, config):
     """Initializes the needed data for summarizer.
@@ -38,12 +40,8 @@ class Summarizer:
     if self.clusterer_has_run:
       self.clusterer_col = config.clusterer.output_column_name
     self.n_messages = config.summarizer.n_messages
-    self.summary_input_column = config.summarizer.summary_input_column
-    self.ignore_lines = [
-        re.compile(st)
-        for st in config.summarizer.ignore_class_line_regex_matcher
-    ]
     self.n_class_lines_to_show = config.summarizer.n_class_lines_to_show
+    self.tokenizer = Tokenizer(config)
 
   def summarize_exception(self, exception_message_column):
     """Extracts the useful information from the exception column.
@@ -70,24 +68,10 @@ class Summarizer:
       message_list = pd.read_json(message_json).values
       # we arbitrarily choose the first message as the representative
       exception_message = message_list[0][0]
-      exception_message_lines = exception_message.splitlines()
-      # get all stack trace lines
-      stack_lines = list(
-          filter(lambda st: st.startswith(self.JAVA_CLASS_LINE_PREFIX),
-                 exception_message_lines))
-      other_text_lines = list(np.setdiff1d(exception_message_lines,
-                                           stack_lines))
-      other_text_lines = list(filter(lambda w: w, other_text_lines))
-      # filter out lines that contain embedded stack trace lines
-      other_text_lines = list(
-          filter(lambda w: not re.search(self.JAVA_CLASS_LINE_PREFIX, w),
-                 other_text_lines))
-      # filtering out class lines that contain uniformative classes.
-      for expr in self.ignore_lines:
-        # pylint: disable=cell-var-from-loop
-        stack_lines = list(filter(lambda st: not expr.search(st), stack_lines))
-      stack_lines = stack_lines[:self.n_class_lines_to_show]
-      stack_lines = list(filter(lambda w: w, stack_lines))
+      stack_lines = self.tokenizer.stack_trace_line_tokenizer(
+          exception_message)[:self.n_class_lines_to_show]
+      other_text_lines = self.tokenizer.human_readable_tokenizer(
+          exception_message)
       stack_lines_col.append('\n'.join(stack_lines))
       other_text_lines_col.append('\n'.join(other_text_lines))
     return stack_lines_col, other_text_lines_col
@@ -110,14 +94,14 @@ class Summarizer:
       a dataframe holding the information
     """
     error_counts = self.df[column].value_counts()
-    df_dropped_cols = self.df.drop(columns=cols_to_drop)
-    groups = df_dropped_cols.groupby(column).agg(
+    groups = self.df.groupby(column).agg(
         lambda x: x[x.notna()].head(self.n_messages).to_json(orient='values'))
     groups['SIZE'] = error_counts
     stack_lines_col, text_lines_col = self.summarize_exception(
-        groups[self.summary_input_column])
+        groups[self.INTERNAL_COLUMN_NAME])
     groups['TEXT'] = text_lines_col
     groups['CLASS_LINES'] = stack_lines_col
+    groups.drop(columns=cols_to_drop)
     return groups.reset_index()
 
   def reorganize_dataframe(self, dataframe, cols_to_reorganize):
@@ -163,7 +147,7 @@ class Summarizer:
     since pandas does not naturally support the repeated fields that GBQ does
     """
     # need to drop added columns in final summary table
-    cols_to_drop = ['_internal_preprocessor_output_col_']
+    cols_to_drop = [self.INTERNAL_COLUMN_NAME]
     # cols to be reordered to the front
     cols_to_reorganize = set()
 
