@@ -12,9 +12,9 @@ class Summarizer:
 
   The summary output dataframe is in the below format:
     error_code / cluster_code : the error code or cluster code of the group
-    'SIZE' : the size of the cluster group / error code group
-    'CLASS_LINES' : a filtered list of the class lines in this exception group
-    'TEXT' : the non-class line information in this exception group
+    'Size' : the size of the cluster group / error code group
+    'ClassLines' : a filtered list of the class lines in this exception group
+    'Text' : the non-class line information in this exception group
     etc... : other input dataframe columns in list format denoting one error per item.
   """
   INTERNAL_COLUMN_NAME = '_internal_preprocessor_output_col_'
@@ -96,12 +96,12 @@ class Summarizer:
     error_counts = self.df[column].value_counts()
     groups = self.df.groupby(column).agg(
         lambda x: x[x.notna()].head(self.n_messages).to_json(orient='values'))
-    groups['SIZE'] = error_counts
+    groups['Size'] = error_counts
     stack_lines_col, text_lines_col = self.summarize_exception(
         groups[self.INTERNAL_COLUMN_NAME])
-    groups['TEXT'] = text_lines_col
-    groups['CLASS_LINES'] = stack_lines_col
-    groups.drop(columns=cols_to_drop)
+    groups['Text'] = text_lines_col
+    groups['ClassLines'] = stack_lines_col
+    groups.drop(columns=cols_to_drop, inplace=True)
     return groups.reset_index()
 
   def reorganize_dataframe(self, dataframe, cols_to_reorganize):
@@ -124,10 +124,10 @@ class Summarizer:
     other_cols = dataframe_cols ^ cols_to_reorganize
     cols_list = list(cols_to_reorganize)
     # Ensure the column order is, 'TEXT', 'CLASS_LINES'
-    cols_list.append(cols_list.pop(cols_list.index('TEXT')))
-    cols_list.append(cols_list.pop(cols_list.index('CLASS_LINES')))
+    cols_list.append(cols_list.pop(cols_list.index('Text')))
+    cols_list.append(cols_list.pop(cols_list.index('ClassLines')))
     # Ensure the column that is second is 'SIZE'
-    cols_list.insert(0, cols_list.pop(cols_list.index('SIZE')))
+    cols_list.insert(0, cols_list.pop(cols_list.index('Size')))
     # Ensure that the first column is the clusterer column
     cols_list.insert(0, cols_list.pop(cols_list.index(self.clusterer_col)))
     return dataframe.loc[:, cols_list + list(other_cols)]
@@ -138,9 +138,9 @@ class Summarizer:
     Returns:
       A dataframe of summary consisting of the following columns:
         error_code / cluster_code : the error code or cluster code of the group
-        'SIZE' : the size of the cluster group / error code group
-        'CLASS_LINES' : a filtered list of the class lines in this exception group
-        'TEXT' : the non-class line information in this exception group
+        'Size' : the size of the cluster group / error code group
+        'ClassLines' : a filtered list of the class lines in this exception group
+        'Text' : the non-class line information in this exception group
         etc... : other input dataframe columns in list format denoting one error per item.
 
     Note: directly using a to_gbq on this dataframe will produce columns consisting of arrays
@@ -161,7 +161,7 @@ class Summarizer:
       cols_to_reorganize.add(self.clusterer_col)
 
     # need to reorganize the columns
-    cols_to_reorganize.add('SIZE')
-    cols_to_reorganize.add('TEXT')
-    cols_to_reorganize.add('CLASS_LINES')
+    cols_to_reorganize.add('Size')
+    cols_to_reorganize.add('Text')
+    cols_to_reorganize.add('ClassLines')
     return self.reorganize_dataframe(cluster_code_groups, cols_to_reorganize)
