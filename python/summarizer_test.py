@@ -41,8 +41,7 @@ class SummarizerTest(unittest.TestCase):
 
     summarizer_stack_lines = Summarizer(self.stack_lines_dataframe, self.config)
     output_df_stack_lines = summarizer_stack_lines.generate_summary()
-    self.assertIn('some.class.java',
-                  output_df_stack_lines['ClassLines'].values)
+    self.assertIn('some.class.java', output_df_stack_lines['ClassLines'].values)
     self.assertIn('some.class2.java',
                   output_df_stack_lines['ClassLines'].values)
     self.assertIn('some.class3.java',

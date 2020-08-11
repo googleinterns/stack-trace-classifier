@@ -23,6 +23,13 @@ class TokenizerTest(unittest.TestCase):
     stack_trace_config.clusterer.tokenizer.token_min_length = 0
     stack_trace_config.clusterer.tokenizer.mode = config_pb2.Tokenizer.TokenizerMode.STACK_TRACE_LINES
     self.stack_trace_tokenizer = Tokenizer(stack_trace_config)
+
+    ignore_test_config = config_pb2.Config()
+    ignore_test_config.clusterer.tokenizer.token_min_length = 2
+    ignore_test_config.clusterer.tokenizer.mode = config_pb2.Tokenizer.TokenizerMode.HUMAN_READABLE
+    ignore_test_config.clusterer.tokenizer.ignore_token_matcher.extend(
+        ['uselessInfo'])
+    self.ignore_test_config = Tokenizer(ignore_test_config)
     super(TokenizerTest, self).setUp()
 
   def test_human_readable_tokenizer(self):
@@ -74,6 +81,14 @@ class TokenizerTest(unittest.TestCase):
     self.assertEqual(
         self.stack_trace_tokenizer.stack_trace_line_tokenizer(
             sample_stack_trace), sample_extracted_lines)
+
+  def test_token_ignore(self):
+    """Test suite to test functionality of ignoring specific tokens."""
+    sample_string = 'this is useful info, but this is uselessInfo'
+    sample_tokens = ['this', 'is', 'useful', 'info', 'but', 'this', 'is']
+    self.assertEqual(
+        self.ignore_test_config.human_readable_tokenizer(sample_string),
+        sample_tokens)
 
 
 if __name__ == "__main__":

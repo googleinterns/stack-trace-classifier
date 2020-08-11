@@ -20,6 +20,7 @@ clusterer {
     punctuation: "\n"
     punctuation: "/"
     punctuation: "\t"
+    ignore_token_matcher: "eye3-ignored"
   }
   mini_batch: false
   min_cluster: 2

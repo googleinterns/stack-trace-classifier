@@ -2,8 +2,6 @@
 import re
 import string
 
-import proto.config_pb2 as config_pb2
-
 
 class Tokenizer:
   """Class for our general suite of string tokenizers for our Clusterer."""
@@ -20,6 +18,10 @@ class Tokenizer:
     # Additional splitting only makes sense on human readable mode
     self.split_ons = config.clusterer.tokenizer.split_on
     self.punctuations = config.clusterer.tokenizer.punctuation
+    self.ignore_tokens = [
+        token.lower()
+        for token in config.clusterer.tokenizer.ignore_token_matcher
+    ]
 
   def human_readable_tokenizer(self, input_string):
     """Tokenization method for parsing the input_string into a human readable list of strings.
@@ -42,6 +44,7 @@ class Tokenizer:
     tokens = input_string.split()
     # Split for every other defined additional splitter
     for split_on in self.split_ons:
+      # pylint: disable=cell-var-from-loop
       tokens = sum(map(lambda w: re.split(split_on, w), tokens), [])
     # Remove all lines that contain '.' (extraneous class info)
     # Examples include embedded class 'com.google.net.rpc3.RpcException:'
@@ -56,14 +59,20 @@ class Tokenizer:
     # WARNING this regex actually matches to certain words like 'be' since
     # 'be' is indeed a hex value
     numerics_regex = r'[0-9a-f|:|\.|\[|\]]+'
-    tokens = list(filter(lambda w: not re.fullmatch(numerics_regex, w), tokens))  # pylint: disable=cell-var-from-loop
+    # pylint: disable=cell-var-from-loop
+    tokens = list(filter(lambda w: not re.fullmatch(numerics_regex, w), tokens))
     # Remove 1 word characters
     tokens = list(filter(lambda w: len(w) >= self.min_token_len, tokens))
     # Remove empty strings
     tokens = list(filter(lambda w: w, tokens))
     # lowercase all words for consistency
     tokens = list(map(lambda w: w.lower(), tokens))
-    return tokens
+    # filter out undesired tokens
+    filtered_tokens = []
+    for token in tokens:
+      if token not in self.ignore_tokens:
+        filtered_tokens.append(token)
+    return filtered_tokens
 
   def stack_trace_line_tokenizer(self, input_string):
     """Tokenization method for parsing the input_string into a list of stack trace strings.
@@ -91,7 +100,13 @@ class Tokenizer:
     stack_lines = list(
         filter(lambda line: len(line) >= self.min_token_len, stack_lines))
 
-    return stack_lines
+    filtered_lines = []
+    # filter out undesired tokens
+    for line in stack_lines:
+      if line not in self.ignore_tokens:
+        filtered_lines.append(line)
+
+    return filtered_lines
 
   def combined_tokenizer(self, input_string):
     """Tokenization method for parsing input_string into list of tokens.

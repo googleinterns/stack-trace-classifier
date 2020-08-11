@@ -88,6 +88,11 @@ message Tokenizer {
   // Note by default strings are split using spaces and new lines
   // i.e. "="
   repeated string split_on = 5;
+
+  // Token level raw match filtering system. (NOT REGEX)
+  // Useful for strings like 'eye3-ignored' which we know to be uninformative
+  // Note this is case-insensitve.
+  repeated string ignore_token_matcher = 6;
 }
 
 // Optional preprocessor utilized by a Tokenizer
