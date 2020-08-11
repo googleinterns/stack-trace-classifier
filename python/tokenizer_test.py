@@ -48,6 +48,15 @@ class TokenizerTest(unittest.TestCase):
         self.human_readable_tokenizer.human_readable_tokenizer(
             extra_split_test), split_tokens)
 
+    # Extracting useful text & removing stack lines test
+    stack_trace = open('testdata/tokenizer/human_readable_trace.txt').read()
+    stack_trace_tokens = [
+        'some', 'hopefully', 'useful', 'english', 'text', 'here'
+    ]
+    self.assertEqual(
+        self.human_readable_tokenizer.human_readable_tokenizer(stack_trace),
+        stack_trace_tokens)
+
   def test_stack_trace_line_tokenizer(self):
     """Test suite for stack_trace_line_tokenizer."""
     # example stack trace we would want to extract from

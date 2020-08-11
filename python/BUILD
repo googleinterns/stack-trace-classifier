@@ -108,6 +108,7 @@ py_test(
         "tokenizer_test.py",
     ],
     data = [
+        "//testdata:tokenizer/human_readable_trace.txt",
         "//testdata:tokenizer/sample_stack_trace.txt",
     ],
     main = "tokenizer_test.py",

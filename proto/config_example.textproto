@@ -2,7 +2,7 @@ error_code_matcher {
   ignore_server_error_reason: SERVER_ERROR_REASON_UNKNOWN
   ignore_server_error_reason: SERVER_UNEXPECTED_EXCEPTION
   ignore_storage_error_reason: STORAGE_ERROR_REASON_UNKNOWN
-  output_column_name: "ERROR_CODE"
+  output_column_name: "ErrorCode"
 }
 clusterer {
   tokenizer {
@@ -24,20 +24,12 @@ clusterer {
   mini_batch: false
   min_cluster: 2
   max_cluster: 20
-  output_column_name: "CLUSTER_CODE"
+  output_column_name: "ClusterCode"
 }
 informative_column: "exception"
 informative_column: "remoteException"
 informative_column: "errorMessage"
 summarizer {
   n_messages: 20
-  summary_input_column: "exception"
-  ignore_class_line_regex_matcher: "com.google.apps.framework"
-  ignore_class_line_regex_matcher: "com.google.moneta.api2.framework"
-  ignore_class_line_regex_matcher: "com.google.common.util"
-  ignore_class_line_regex_matcher: "java.util"
-  ignore_class_line_regex_matcher: "java.lang"
-  ignore_class_line_regex_matcher: "\$"
-  ignore_class_line_regex_matcher: "sun.reflect"
   n_class_lines_to_show: 20
 }
