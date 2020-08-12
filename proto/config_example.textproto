@@ -8,6 +8,7 @@ clusterer {
   tokenizer {
     preprocessor {
       ignore_line_regex_matcher: "Suppressed"
+      ignore_word_regex_matcher: "eye3-ignored title"
     }
     mode: HUMAN_READABLE
     token_min_length: 1
@@ -20,7 +21,7 @@ clusterer {
     punctuation: "\n"
     punctuation: "/"
     punctuation: "\t"
-    ignore_token_matcher: "eye3-ignored"
+    ignore_token_matcher: "generic::internal"
   }
   mini_batch: false
   min_cluster: 2

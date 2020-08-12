@@ -31,6 +31,7 @@ class Preprocessor:
     self.informative_columns = config.informative_column
     self.ignore_regexes = config.clusterer.tokenizer.preprocessor.ignore_line_regex_matcher
     self.search_regexes = config.clusterer.tokenizer.preprocessor.search_line_regex_matcher
+    self.ignore_word_regexes = config.clusterer.tokenizer.preprocessor.ignore_word_regex_matcher
     self.output_column_name = output_column_name
 
   def filter_lines(self, input_lines):
@@ -50,6 +51,26 @@ class Preprocessor:
     for expr in regex_expressions:
       input_lines = list(filter(lambda st: not expr.search(st), input_lines))
     return input_lines
+
+  def filter_words(self, input_string):
+    """Searches the input_string for matching regular expression strings to eliminate.
+
+    Note: unlike filter_lines, this method replaces the matching regex with empty string rather
+    than removing the entire line. This is useful for certain tokens we know will be uninformative
+    but appear in lines that may otherwise contain informative tokens i.e. 'eye3-ignored title'
+
+    Args:
+      input_string: input_string to filter
+
+    Returns:
+      the input_string except with all occurrences of matching ignore word regex matches removed
+    """
+    regex_expressions = [
+        re.compile(regex) for regex in self.ignore_word_regexes
+    ]
+    for expr in regex_expressions:
+      input_string = expr.sub('', input_string)
+    return input_string
 
   def search_lines(self, input_lines):
     """Searches the input_lines for matching regular expressions.
@@ -90,7 +111,9 @@ class Preprocessor:
       joined_line_information = '\n'.join(messages).splitlines()
       joined_line_information = self.filter_lines(joined_line_information)
       joined_line_information = self.search_lines(joined_line_information)
-      col.append('\n'.join(joined_line_information))
+      output_joined_string = '\n'.join(joined_line_information)
+      output_joined_string = self.filter_words(output_joined_string)
+      col.append(output_joined_string)
 
     # We store the result into a column that only the tokenizer will use
     # This column should not be outputted in the final table

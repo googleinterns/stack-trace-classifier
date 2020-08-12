@@ -14,12 +14,15 @@ class PreprocessorTest(unittest.TestCase):
     ignore_lines = ['USELESS_INFORMATION', 'chicken', 'turkey']
     search_lines = ['USEFUL_INFORMATION', 'error']
     informative_columns = ["exception", "remoteException", "errorMessage"]
+    ignore_words = ['testIgnoreWord']
     # config set ups
     self.config = config_pb2.Config()
     self.config.clusterer.tokenizer.preprocessor.ignore_line_regex_matcher.extend(
         ignore_lines)
     self.config.clusterer.tokenizer.preprocessor.search_line_regex_matcher.extend(
         search_lines)
+    self.config.clusterer.tokenizer.preprocessor.ignore_word_regex_matcher.extend(
+        ignore_words)
     self.config.informative_column.extend(informative_columns)
 
     # dataframe set ups
@@ -47,6 +50,13 @@ class PreprocessorTest(unittest.TestCase):
         'chicken and turkey share the same order'
     ]
     self.assertFalse(preprocessor.filter_lines(multi_match))
+
+  def test_word_filter(self):
+    """Tests pertaining to preprocessor.filter_words."""
+    preprocessor = Preprocessor(self.empty_dataframe, self.config, '_INFO_')
+    sample_string = 'Some error information here, testIgnoreWord'
+    self.assertEqual(preprocessor.filter_words(sample_string),
+                      'Some error information here, ')
 
   def test_search_lines(self):
     """Various test cases for preprocessor.search_lines."""
