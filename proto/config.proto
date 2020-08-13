@@ -88,18 +88,31 @@ message Tokenizer {
   // Note by default strings are split using spaces and new lines
   // i.e. "="
   repeated string split_on = 5;
+
+  // Token level raw match filtering system. (NOT REGEX)
+  // Useful for strings like 'generic::internal' which we know to be uninformative
+  // yet might appear in the tokenization.
+  // This is the final level of token filtering and should be used it something is
+  // noticebly uninformative in the 'Text' field of our classifier.
+  // Note this is case-insensitve.
+  repeated string ignore_token_matcher = 6;
 }
 
 // Optional preprocessor utilized by a Tokenizer
 message Preprocessor {
-  // Optional regular expressions to explicitly omit
-  // I.E. "\tat" which gets rid of (at SomeClass.AnotherClass.LastClass)
+  // Optional regular expressions to explicitly omit lines for
+  // I.E. "\tat" which gets rid of all lines of the form (at SomeClass.AnotherClass.LastClass)
   repeated string ignore_line_regex_matcher = 1;
 
-  // Optional regular expressions to explicity search for
+  // Optional regular expressions to explicity search lines for
   // Note any string not matching to this will not be included in the tokenizer
   // I.E. "ERROR" which scans only for lines containing "ERROR"
   repeated string search_line_regex_matcher = 2;
+
+  // Optional regular expressions to omit certain words for
+  // This replaces the regular expressions with empty string
+  // Use this instead of ingore_line_regex_matcher when you don't want the entire line removed
+  repeated string ignore_word_regex_matcher = 3;
 }
 
 message Summarizer {

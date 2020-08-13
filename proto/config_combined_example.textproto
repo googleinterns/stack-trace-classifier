@@ -17,6 +17,7 @@ clusterer {
       ignore_line_regex_matcher: "java.util"
       ignore_line_regex_matcher: "\$"
       ignore_line_regex_matcher: "sun.reflect"
+      ignore_word_regex_matcher: "eye3-ignored title"
     }
     mode: COMBINED
     token_min_length: 1
@@ -29,6 +30,7 @@ clusterer {
     punctuation: "\n"
     punctuation: "/"
     punctuation: "\t"
+    ignore_token_matcher: "generic::internal"
   }
   mini_batch: false
   min_cluster: 2
