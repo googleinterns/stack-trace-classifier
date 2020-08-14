@@ -16,15 +16,14 @@ class Preprocessor:
       config contains a not None field clusterer, tokenizer and preprocessor
 
     Args:
-      df: A pandas dataframe consisting of the exception column, a name
+      df: pandas dataframe consisting of the exception column, a name
         column, an errorMessage column and optionally a remoteException
         column
 
-      config: A configuration file in the format as specified by the
-        config.proto.
+      config: config_pb2 proto specified by the configuration file
 
-      output_column_name: Internal output_column_name to propagate the results of the Preprocessor
-        to our Tokenizer and Classifier.
+      output_column_name: str of internal output_column_name to propagate the results of the
+        Preprocessor to our Tokenizer and Classifier.
         Note, this column is used exclusively internally and should be passed in from Classifier
     """
     self.df = df
@@ -41,15 +40,14 @@ class Preprocessor:
     This function removes these matching lines.
 
     Args:
-      input_lines: list of strings to filter
+      input_lines: List[str] to filter
 
     Returns:
-      a list of strings as output with all strings not matching to the regular expressions
-        as found in ignore_regexes
+      List[str] not matching to the regular expressions as found in ignore_regexes
     """
     regex_expressions = [re.compile(regex) for regex in self.ignore_regexes]
     for expr in regex_expressions:
-      input_lines = list(filter(lambda st: not expr.search(st), input_lines))
+      input_lines = [st for st in input_lines if not expr.search(st)]
     return input_lines
 
   def filter_words(self, input_string):
@@ -60,10 +58,10 @@ class Preprocessor:
     but appear in lines that may otherwise contain informative tokens i.e. 'eye3-ignored title'
 
     Args:
-      input_string: input_string to filter
+      input_string: str to filter
 
     Returns:
-      the input_string except with all occurrences of matching ignore word regex matches removed
+      str same as input except with all occurrences of matching ignore word regex matches removed
     """
     regex_expressions = [
         re.compile(regex) for regex in self.ignore_word_regexes
@@ -78,10 +76,10 @@ class Preprocessor:
       Note: all input_lines not containing the matching regular expressions will be removed
 
     Args:
-      input_lines: list of strings to filter
+      input_lines: List[str] to filter
 
     Returns:
-      a list of strings as output filtered such that each string contains all of the
+      List[str] filtered such that each string contains all of the
         regular expression matches as found in search_regexes
     """
     regex_expressions = [re.compile(regex) for regex in self.search_regexes]

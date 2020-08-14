@@ -36,13 +36,13 @@ def output_dataframe_to_gbq(output_dataframe, project_id, dataset_id,
   """Writes back to big query the results of the summarized dataframe, output_dataframe.
 
   Args:
-    output_dataframe: dataframe we are writing to bigquery
+    output_dataframe: pandas dataframe we are writing to bigquery
 
-    project_id: project id of the bigquery table we are writing to
+    project_id: str project id of the bigquery table we are writing to
 
-    dataset_id: dataset id of the bigquery table we are writing to
+    dataset_id: str dataset id of the bigquery table we are writing to
 
-    output_table_id: output table name of the bigquery table we are writing to
+    output_table_id: str output table name of the bigquery table we are writing to
 
   On Return:
     Writes the output dataframe to bigquery
@@ -56,9 +56,9 @@ def run_classification_summary(df, classifier_config):
   """Runs the various classification algorithms outputting a summary dataframe.
 
   Args:
-    df: input dataframe containing the error information we wish to classify and summarize
+    df: pandas dataframe containing the error information we wish to classify and summarize
 
-    classifier_config: configuration file expected to be in the format of config.proto
+    classifier_config: config_pb2 proto specified by the configuration file
 
   Returns:
     pandas dataframe that summarizes the information obtained from the classification algorithms

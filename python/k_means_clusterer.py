@@ -20,8 +20,7 @@ class KMeansClusterer:
         column, an errorMessage column and optionally a remoteException
         column
 
-      config: A configuration file in the format as specified by the
-        config.proto.
+      config: config_pb2 proto specified by the configuration file
     """
     self.df = df
 
