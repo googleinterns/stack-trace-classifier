@@ -26,11 +26,9 @@ class Summarizer:
         config contains a not None field clusterer, tokenizer and preprocessor
 
       Args:
-        df: A pandas dataframe that has finished running the various classification algorithms
-          as defined in config
+        df: pandas dataframe that has finished running the various classification algorithms
 
-        config: A configuration file in the format as specified by the
-          config.proto.
+        config: config_pb2 proto specified by the configuration file
     """
     self.df = df
     self.error_code_matcher_has_run = config.HasField('error_code_matcher')
@@ -52,14 +50,14 @@ class Summarizer:
     Whereas all non-java (presumably text information) is included in other_text_lines_col
 
     Args:
-      exception_message_column: grouped column of exception information we are attempting to
-      extract a summary from
+      exception_message_column: pd series grouped column of exception information we are attempting
+      to extract a summary from
 
     Returns:
-      tuple of (stack_lines_col, other_text_lines_col)
-        stack_lines_col : list that represents the possibly useful information as found in
+      tuple of (stack_lines_col, other_text_lines_col) :
+        stack_lines_col : List[str] that represents the possibly useful information as found in
         each of the stack trace lines of the chosen message column
-      other_text_lines_col : list that represents the possibly useful (text) information
+      other_text_lines_col : List[str] that represents the possibly useful (text) information
         in each stack trace in the message column
     """
     stack_lines_col = []
@@ -85,13 +83,13 @@ class Summarizer:
     cluster / error code group
 
     Args:
-      column: string the classification algorithm that is being summarized denoted by the column
+      column: str the classification algorithm that is being summarized denoted by the column
         string it corresponds with
 
-      cols_to_drop: list of columns to drop in the summary dataframe
+      cols_to_drop: List[str] of columns to drop in the summary dataframe
 
     Returns:
-      a dataframe holding the information
+      pandas dataframe holding the information
     """
     error_counts = self.df[column].value_counts()
     groups = self.df.groupby(column).agg(
@@ -112,12 +110,12 @@ class Summarizer:
     This method also ensures that cluster_code appears as the first column.
 
     Args:
-      dataframe: dataframe to reorganize the information of
+      dataframe: pandas dataframe to reorganize the information of
 
-      cols_to_reorganize: columns to be placed first, ahead of the other columns
+      cols_to_reorganize: List[str] columns to be placed first, ahead of the other columns
 
     Returns:
-      A dataframe with the same information exception with the cols_to_reorganize occurring
+      pandas dataframe with the same information exception with the cols_to_reorganize occurring
       first
     """
     dataframe_cols = set(dataframe.columns)
@@ -136,7 +134,7 @@ class Summarizer:
     """Outputs a summary of the various error codes in a readable dataframe format.
 
     Returns:
-      A dataframe of summary consisting of the following columns:
+      pandas dataframe of summary consisting of the following columns:
         error_code / cluster_code : the error code or cluster code of the group
         'Size' : the size of the cluster group / error code group
         'ClassLines' : a filtered list of the class lines in this exception group

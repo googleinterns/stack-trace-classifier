@@ -11,12 +11,11 @@ class ErrorCodeMatcher:
     Preconditions: config has field error_code_matcher not None
 
     Args:
-      df: A pandas dataframe consisting of the exception column, a name
+      df: pandas dataframe consisting of the exception column, a name
         column, an errorMessage column and optionally a remoteException
         column
 
-      config: A configuration file in the format as specified by the
-        config.proto.
+      config: config_pb2 proto specified by the configuration file
     """
     self.df = df
     self.informative_columns = config.informative_column
@@ -27,7 +26,7 @@ class ErrorCodeMatcher:
     """Populates the default informative errors using the informative_errors protobuf.
 
     Args:
-      config: configuration file in expected config format.
+      config: config_pb2 proto specified by the configuration file
     """
     errors = []
     # find all enum descriptors in error_code_matcher protobuf

@@ -56,7 +56,7 @@ class PreprocessorTest(unittest.TestCase):
     preprocessor = Preprocessor(self.empty_dataframe, self.config, '_INFO_')
     sample_string = 'Some error information here, testIgnoreWord'
     self.assertEqual(preprocessor.filter_words(sample_string),
-                      'Some error information here, ')
+                     'Some error information here, ')
 
   def test_search_lines(self):
     """Various test cases for preprocessor.search_lines."""
